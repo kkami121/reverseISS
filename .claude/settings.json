@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(powershell.exe -Command \"Stop-Process -Id 36484 -Force\")"
+    ],
+    "additionalDirectories": [
+      "d:\\reverseISS"
+    ]
+  }
+}
