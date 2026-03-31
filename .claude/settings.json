@@ -1,7 +1,11 @@
 {
   "permissions": {
     "allow": [
-      "Bash(powershell.exe -Command \"Stop-Process -Id 36484 -Force\")"
+      "Bash(powershell.exe -Command \"Stop-Process -Id 36484 -Force\")",
+      "Bash(powershell.exe -Command \"Stop-Process -Id 47652 -Force\")",
+      "Bash(powershell.exe -Command \"Stop-Process -Id 15724 -Force\")",
+      "Bash(powershell.exe -Command \"[System.Environment]::GetEnvironmentVariable\\(''JAVA_HOME'', ''Machine''\\)\")",
+      "Read(//c/Users/gypark/AppData/Local/Programs/Eclipse Adoptium/jdk-17.0.14.7-hotspot/bin/**)"
     ],
     "additionalDirectories": [
       "d:\\reverseISS"

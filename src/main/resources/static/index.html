@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>세금계산서 역발행</title>
+    <style>
+        body { font-family: sans-serif; max-width: 800px; margin: 40px auto; padding: 0 20px; }
+        h2 { margin-bottom: 8px; }
+        h3 { margin: 24px 0 8px; color: #333; border-bottom: 1px solid #ddd; padding-bottom: 4px; }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0 16px; }
+        label { display: block; margin-top: 10px; font-size: 13px; color: #555; }
+        input { width: 100%; padding: 7px; margin-top: 3px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 4px; font-size: 13px; }
+        .item-block { border: 1px solid #ddd; border-radius: 6px; padding: 12px; margin-top: 10px; position: relative; }
+        .item-block h4 { margin: 0 0 8px; font-size: 14px; }
+        .remove-btn { position: absolute; top: 10px; right: 10px; background: #ef4444; color: #fff; border: none; border-radius: 4px; padding: 4px 10px; cursor: pointer; font-size: 12px; }
+        .add-btn { margin-top: 10px; padding: 8px 20px; background: #6b7280; color: #fff; border: none; border-radius: 4px; cursor: pointer; font-size: 13px; }
+        .submit-btn { margin-top: 24px; padding: 12px 40px; background: #2563eb; color: #fff; border: none; border-radius: 6px; font-size: 16px; cursor: pointer; display: block; width: 100%; }
+        .submit-btn:hover { background: #1d4ed8; }
+        #result { margin-top: 20px; padding: 16px; background: #f1f5f9; border-radius: 6px; white-space: pre-wrap; font-size: 13px; display: none; }
+    </style>
+</head>
+<body>
+    <h2>세금계산서 역발행</h2>
+
+    <h3>기본 정보</h3>
+    <div class="grid">
+        <div>
+            <label>사업자번호 (CORP_BIZ_NO)</label>
+            <input id="corpBizNo" value="1058111908">
+        </div>
+        <div>
+            <label>ERP 사용자 ID (ERP_USER_MAKE_ID)</label>
+            <input id="erpUserMakeId" value="202410150003">
+        </div>
+        <div>
+            <label>문서유형 (DOCUMENT_TYPE)</label>
+            <input id="documentType" value="00">
+        </div>
+        <div>
+            <label>세금유형 (TAX_TYPE)</label>
+            <input id="taxType" value="0">
+        </div>
+        <div>
+            <label>작성일자 (MAKE_DATE)</label>
+            <input id="makeDate" value="20260331">
+        </div>
+        <div>
+            <label>거래유형 (TRAN_TYPE)</label>
+            <input id="tranType" value="01">
+        </div>
+        <div>
+            <label>수정사유 (MOD_REASON)</label>
+            <input id="modReason" value="">
+        </div>
+        <div>
+            <label>원본발행ID (ORI_ISSUE_ID)</label>
+            <input id="oriIssueId" value="">
+        </div>
+        <div>
+            <label>SMS 발송여부 (SMS_GB)</label>
+            <input id="smsGb" value="N">
+        </div>
+        <div>
+            <label>비고 (BIGO)</label>
+            <input id="bigo" value="BIGO TEST">
+        </div>
+    </div>
+
+    <h3>금액</h3>
+    <div class="grid">
+        <div>
+            <label>공급가액 (SUPPLY_AMT)</label>
+            <input id="supplyAmt" value="1000">
+        </div>
+        <div>
+            <label>세액 (TAX_AMT)</label>
+            <input id="taxAmt" value="100">
+        </div>
+        <div>
+            <label>합계금액 (TOTAL_AMT)</label>
+            <input id="totalAmt" value="1100">
+        </div>
+        <div>
+            <label>현금 (CASH_AMT)</label>
+            <input id="cashAmt" value="">
+        </div>
+        <div>
+            <label>수표 (CHECK_AMT)</label>
+            <input id="checkAmt" value="">
+        </div>
+        <div>
+            <label>어음 (BILL_AMT)</label>
+            <input id="billAmt" value="">
+        </div>
+        <div>
+            <label>미수금 (UNCOLLECT_AMT)</label>
+            <input id="uncollectAmt" value="">
+        </div>
+    </div>
+
+    <h3>공급자 정보</h3>
+    <div class="grid">
+        <div>
+            <label>공급자 사업자번호 (COMP_REGISTER_NO)</label>
+            <input id="compRegisterNo" value="2148159394">
+        </div>
+        <div>
+            <label>공급자 종사업장 (COMP_SUB_ID)</label>
+            <input id="compSubId" value="2222">
+        </div>
+        <div>
+            <label>공급자 상호 (COMP_NAME)</label>
+            <input id="compName" value="기웅테스트">
+        </div>
+        <div>
+            <label>공급자 대표자 (COMP_REPRESENT)</label>
+            <input id="compRepresent" value="한경민">
+        </div>
+        <div>
+            <label>업태 (COMP_BIZ_STATE)</label>
+            <input id="compBizState" value="공급자업태">
+        </div>
+        <div>
+            <label>업종 (COMP_BIZ_CATEGORY)</label>
+            <input id="compBizCategory" value="공급자업종">
+        </div>
+        <div>
+            <label>우편번호 (COMP_ZIP_CODE)</label>
+            <input id="compZipCode" value="11111">
+        </div>
+        <div>
+            <label>주소 (COMP_ADDRESS1)</label>
+            <input id="compAddress1" value="공급자주소">
+        </div>
+        <div>
+            <label>상세주소 (COMP_ADDRESS2)</label>
+            <input id="compAddress2" value="공급자상세주소">
+        </div>
+    </div>
+
+    <h3>담당자 정보 (공급자측)</h3>
+    <div class="grid">
+        <div>
+            <label>담당자명 (MEMBER_NM)</label>
+            <input id="memberNm" value="박귀열">
+        </div>
+        <div>
+            <label>전화번호1 (MEMBER_TEL_NO1)</label>
+            <input id="memberTelNo1" value="010">
+        </div>
+        <div>
+            <label>전화번호2 (MEMBER_TEL_NO2)</label>
+            <input id="memberTelNo2" value="2437">
+        </div>
+        <div>
+            <label>전화번호3 (MEMBER_TEL_NO3)</label>
+            <input id="memberTelNo3" value="2439">
+        </div>
+        <div>
+            <label>이메일 (MEMBER_EMAIL)</label>
+            <input id="memberEmail" value="gypark@shinwon.com">
+        </div>
+        <div>
+            <label>부서 (MEMBER_POST)</label>
+            <input id="memberPost" value="부서">
+        </div>
+    </div>
+
+    <h3>공급받는자 정보</h3>
+    <div class="grid">
+        <div>
+            <label>사업자번호 (CUST_REGISTER_NO)</label>
+            <input id="custRegisterNo" value="1231231212">
+        </div>
+        <div>
+            <label>종사업장 (CUST_SUB_ID)</label>
+            <input id="custSubId" value="9999">
+        </div>
+        <div>
+            <label>상호 (CUST_NAME)</label>
+            <input id="custName" value="CUST NAME TEST">
+        </div>
+        <div>
+            <label>대표자 (CUST_REPRESENT)</label>
+            <input id="custRepresent" value="TEST">
+        </div>
+        <div>
+            <label>업태 (CUST_BIZ_STATE)</label>
+            <input id="custBizState" value="CUST STATE">
+        </div>
+        <div>
+            <label>업종 (CUST_BIZ_CATEGORY)</label>
+            <input id="custBizCategory" value="CUST CATE">
+        </div>
+        <div>
+            <label>우편번호 (CUST_ZIP_CODE)</label>
+            <input id="custZipCode" value="22222">
+        </div>
+        <div>
+            <label>주소 (CUST_ADDRESS1)</label>
+            <input id="custAddress1" value="CUST ADDR">
+        </div>
+        <div>
+            <label>상세주소 (CUST_ADDRESS2)</label>
+            <input id="custAddress2" value="CUST ADDR2">
+        </div>
+        <div>
+            <label>구분 (CUST_KIND)</label>
+            <input id="custKind" value="">
+        </div>
+    </div>
+
+    <h3>수신담당자1</h3>
+    <div class="grid">
+        <div>
+            <label>담당자명 (MANAGER_NM)</label>
+            <input id="managerNm" value="MANA NAME">
+        </div>
+        <div>
+            <label>전화번호1 (MANAGER_TEL_NO1)</label>
+            <input id="managerTelNo1" value="010">
+        </div>
+        <div>
+            <label>전화번호2 (MANAGER_TEL_NO2)</label>
+            <input id="managerTelNo2" value="2222">
+        </div>
+        <div>
+            <label>전화번호3 (MANAGER_TEL_NO3)</label>
+            <input id="managerTelNo3" value="3333">
+        </div>
+        <div>
+            <label>이메일 (MANAGER_EMAIL)</label>
+            <input id="managerEmail" value="TEST@shinwon.com">
+        </div>
+        <div>
+            <label>부서 (MANAGER_POST)</label>
+            <input id="managerPost" value="TEST DEPT">
+        </div>
+    </div>
+
+    <h3>수신담당자2</h3>
+    <div class="grid">
+        <div>
+            <label>담당자명 (MANAGER2_NM)</label>
+            <input id="manager2Nm" value="MANA NAME2">
+        </div>
+        <div>
+            <label>전화번호1 (MANAGER2_TEL_NO1)</label>
+            <input id="manager2TelNo1" value="010">
+        </div>
+        <div>
+            <label>전화번호2 (MANAGER2_TEL_NO2)</label>
+            <input id="manager2TelNo2" value="4444">
+        </div>
+        <div>
+            <label>전화번호3 (MANAGER2_TEL_NO3)</label>
+            <input id="manager2TelNo3" value="5555">
+        </div>
+        <div>
+            <label>이메일 (MANAGER2_EMAIL)</label>
+            <input id="manager2Email" value="TEST2@shinwon.com">
+        </div>
+        <div>
+            <label>부서 (MANAGER2_POST)</label>
+            <input id="manager2Post" value="TEST DEPT2">
+        </div>
+    </div>
+
+    <h3>기타</h3>
+    <div class="grid">
+        <div>
+            <label>장부번호1 (BOOK_NO1)</label>
+            <input id="bookNo1" value="001">
+        </div>
+        <div>
+            <label>장부번호2 (BOOK_NO2)</label>
+            <input id="bookNo2" value="002">
+        </div>
+        <div>
+            <label>일련번호 (SERIAL_NO)</label>
+            <input id="serialNo" value="003">
+        </div>
+    </div>
+
+    <h3>품목 목록 (IT_ITEMLIST)</h3>
+    <div id="itemList"></div>
+    <button class="add-btn" onclick="addItem()">+ 품목 추가</button>
+
+    <button class="submit-btn" onclick="issue()">세금계산서 발행</button>
+    <div id="result"></div>
+
+    <script>
+        let itemCount = 0;
+
+        function addItem() {
+            itemCount++;
+            const div = document.createElement('div');
+            div.className = 'item-block';
+            div.id = 'item-' + itemCount;
+            div.innerHTML = `
+                <h4>품목 ${itemCount}</h4>
+                <button class="remove-btn" onclick="removeItem(${itemCount})">삭제</button>
+                <div class="grid">
+                    <div><label>ERP_USER_MAKE_ID</label><input class="i-erpUserMakeId" value="202410150003"></div>
+                    <div><label>DETAIL_NO</label><input class="i-detailNo" value="1"></div>
+                    <div><label>YEAR</label><input class="i-year" value="2026"></div>
+                    <div><label>MONTH</label><input class="i-month" value="03"></div>
+                    <div><label>DAY</label><input class="i-day" value="08"></div>
+                    <div><label>ARTICLE_NM</label><input class="i-articleNm" value="테스트 품목"></div>
+                    <div><label>STANDARD</label><input class="i-standard" value=""></div>
+                    <div><label>QUANTITY</label><input class="i-quantity" value=""></div>
+                    <div><label>UNIT_AMT</label><input class="i-unitAmt" value=""></div>
+                    <div><label>SUPPLY_AMT</label><input class="i-supplyAmt" value="1000"></div>
+                    <div><label>TAX_AMT</label><input class="i-taxAmt" value="100"></div>
+                    <div><label>BIGO</label><input class="i-bigo" value="품목테스트"></div>
+                </div>
+            `;
+            document.getElementById('itemList').appendChild(div);
+        }
+
+        function removeItem(id) {
+            document.getElementById('item-' + id).remove();
+        }
+
+        function val(id) { return document.getElementById(id).value; }
+
+        async function issue() {
+            const items = [];
+            document.querySelectorAll('.item-block').forEach(block => {
+                items.push({
+                    erpUserMakeId: block.querySelector('.i-erpUserMakeId').value,
+                    detailNo:    block.querySelector('.i-detailNo').value,
+                    year:        block.querySelector('.i-year').value,
+                    month:       block.querySelector('.i-month').value,
+                    day:         block.querySelector('.i-day').value,
+                    articleNm:   block.querySelector('.i-articleNm').value,
+                    standard:    block.querySelector('.i-standard').value,
+                    quantity:    block.querySelector('.i-quantity').value,
+                    unitAmt:     block.querySelector('.i-unitAmt').value,
+                    supplyAmt:   block.querySelector('.i-supplyAmt').value,
+                    taxAmt:      block.querySelector('.i-taxAmt').value,
+                    bigo:        block.querySelector('.i-bigo').value,
+                });
+            });
+
+            const body = {
+                corpBizNo:        val('corpBizNo'),
+                erpUserMakeId:    val('erpUserMakeId'),
+                documentType:     val('documentType'),
+                modReason:        val('modReason'),
+                oriIssueId:       val('oriIssueId'),
+                taxType:          val('taxType'),
+                makeDate:         val('makeDate'),
+                tranType:         val('tranType'),
+                cashAmt:          val('cashAmt'),
+                checkAmt:         val('checkAmt'),
+                billAmt:          val('billAmt'),
+                uncollectAmt:     val('uncollectAmt'),
+                taxAmt:           val('taxAmt'),
+                supplyAmt:        val('supplyAmt'),
+                totalAmt:         val('totalAmt'),
+                compRegisterNo:   val('compRegisterNo'),
+                compSubId:        val('compSubId'),
+                compName:         val('compName'),
+                compRepresent:    val('compRepresent'),
+                compBizState:     val('compBizState'),
+                compBizCategory:  val('compBizCategory'),
+                compZipCode:      val('compZipCode'),
+                compAddress1:     val('compAddress1'),
+                compAddress2:     val('compAddress2'),
+                memberNm:         val('memberNm'),
+                memberTelNo1:     val('memberTelNo1'),
+                memberTelNo2:     val('memberTelNo2'),
+                memberTelNo3:     val('memberTelNo3'),
+                memberEmail:      val('memberEmail'),
+                memberPost:       val('memberPost'),
+                custKind:         val('custKind'),
+                custRegisterNo:   val('custRegisterNo'),
+                custSubId:        val('custSubId'),
+                custName:         val('custName'),
+                custRepresent:    val('custRepresent'),
+                custBizState:     val('custBizState'),
+                custBizCategory:  val('custBizCategory'),
+                custZipCode:      val('custZipCode'),
+                custAddress1:     val('custAddress1'),
+                custAddress2:     val('custAddress2'),
+                managerNm:        val('managerNm'),
+                managerTelNo1:    val('managerTelNo1'),
+                managerTelNo2:    val('managerTelNo2'),
+                managerTelNo3:    val('managerTelNo3'),
+                managerEmail:     val('managerEmail'),
+                managerPost:      val('managerPost'),
+                manager2Nm:       val('manager2Nm'),
+                manager2TelNo1:   val('manager2TelNo1'),
+                manager2TelNo2:   val('manager2TelNo2'),
+                manager2TelNo3:   val('manager2TelNo3'),
+                manager2Email:    val('manager2Email'),
+                manager2Post:     val('manager2Post'),
+                bigo:             val('bigo'),
+                bookNo1:          val('bookNo1'),
+                bookNo2:          val('bookNo2'),
+                serialNo:         val('serialNo'),
+                smsGb:            val('smsGb'),
+                items:            items
+            };
+
+            const resultDiv = document.getElementById('result');
+            resultDiv.style.display = 'block';
+            resultDiv.textContent = '요청 중...';
+
+            try {
+                const res = await fetch('/reverse/tax-invoice/issue', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(body)
+                });
+                const data = await res.json();
+                resultDiv.textContent = JSON.stringify(data, null, 2);
+            } catch (e) {
+                resultDiv.textContent = '오류: ' + e.message;
+            }
+        }
+
+        // 기본 품목 1개 추가
+        addItem();
+    </script>
+</body>
+</html>

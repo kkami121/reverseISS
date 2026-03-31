@@ -1,0 +1,22 @@
+services:
+  app:
+    image: eclipse-temurin:17-jdk
+    container_name: reverseiss-dev
+    working_dir: /app
+    volumes:
+      - .:/app
+    command: >
+      sh -c "sed -i '/org.gradle.java.home/d' gradle.properties &&
+             chmod +x gradlew &&
+             ./gradlew compileJava &&
+             ./gradlew -t compileJava &
+             ./gradlew bootRun"
+    environment:
+      SPRING_DEVTOOLS_RESTART_ENABLED: "true"
+      POSTGRES_HOST: ${POSTGRES_HOST}
+      POSTGRES_PORT: ${POSTGRES_PORT}
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - "5004:5004"
