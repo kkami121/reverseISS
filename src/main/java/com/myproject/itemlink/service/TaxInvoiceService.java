@@ -2,7 +2,11 @@ package com.myproject.itemlink.service;
 
 import com.myproject.itemlink.dto.KaccountingRequest;
 import com.myproject.itemlink.dto.KaccountingResponse;
+import com.myproject.itemlink.dto.TaxInvoiceListRequest;
+import com.myproject.itemlink.dto.TaxInvoiceListResponse;
 import com.myproject.itemlink.dto.TaxInvoiceRequest;
+import com.myproject.itemlink.dto.TaxInvoiceStateRequest;
+import com.myproject.itemlink.dto.TaxInvoiceStateResponse;
 import com.myproject.itemlink.entity.TaxInvoiceDetail;
 import com.myproject.itemlink.entity.TaxInvoiceMaster;
 import com.myproject.itemlink.repository.TaxInvoiceMasterRepository;
@@ -20,6 +24,22 @@ public class TaxInvoiceService {
 
     private final RestClient kaccountingRestClient;
     private final TaxInvoiceMasterRepository masterRepository;
+
+    public TaxInvoiceStateResponse state(TaxInvoiceStateRequest req) {
+        return kaccountingRestClient.post()
+                .uri("/EXTERNAL/TAX/GetIssueStateTaxInvoice")
+                .body(req)
+                .retrieve()
+                .body(TaxInvoiceStateResponse.class);
+    }
+
+    public TaxInvoiceListResponse list(TaxInvoiceListRequest req) {
+        return kaccountingRestClient.post()
+                .uri("/API/HTX/GetHtxTaxListSync")
+                .body(req)
+                .retrieve()
+                .body(TaxInvoiceListResponse.class);
+    }
 
     public KaccountingResponse issue(TaxInvoiceRequest req) {
         KaccountingRequest body = buildRequest(req);

@@ -4,292 +4,306 @@
     <meta charset="UTF-8">
     <title>세금계산서 역발행</title>
     <style>
-        body { font-family: sans-serif; max-width: 800px; margin: 40px auto; padding: 0 20px; }
-        h2 { margin-bottom: 8px; }
-        h3 { margin: 24px 0 8px; color: #333; border-bottom: 1px solid #ddd; padding-bottom: 4px; }
+        * { box-sizing: border-box; }
+        body { font-family: sans-serif; max-width: 900px; margin: 40px auto; padding: 0 20px; background: #f8fafc; }
+
+        /* 탭 */
+        .tabs { display: flex; gap: 4px; margin-bottom: 0; }
+        .tab-btn {
+            padding: 10px 28px; border: 1px solid #ddd; border-bottom: none;
+            background: #e2e8f0; cursor: pointer; border-radius: 6px 6px 0 0;
+            font-size: 14px; font-weight: 600; color: #64748b;
+        }
+        .tab-btn.active { background: #fff; color: #2563eb; border-color: #ddd; }
+
+        .tab-content { display: none; background: #fff; border: 1px solid #ddd; border-radius: 0 6px 6px 6px; padding: 24px; }
+        .tab-content.active { display: block; }
+
+        h3 { margin: 20px 0 8px; color: #333; border-bottom: 1px solid #eee; padding-bottom: 4px; font-size: 14px; }
         .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0 16px; }
-        label { display: block; margin-top: 10px; font-size: 13px; color: #555; }
-        input { width: 100%; padding: 7px; margin-top: 3px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 4px; font-size: 13px; }
-        .item-block { border: 1px solid #ddd; border-radius: 6px; padding: 12px; margin-top: 10px; position: relative; }
-        .item-block h4 { margin: 0 0 8px; font-size: 14px; }
-        .remove-btn { position: absolute; top: 10px; right: 10px; background: #ef4444; color: #fff; border: none; border-radius: 4px; padding: 4px 10px; cursor: pointer; font-size: 12px; }
-        .add-btn { margin-top: 10px; padding: 8px 20px; background: #6b7280; color: #fff; border: none; border-radius: 4px; cursor: pointer; font-size: 13px; }
-        .submit-btn { margin-top: 24px; padding: 12px 40px; background: #2563eb; color: #fff; border: none; border-radius: 6px; font-size: 16px; cursor: pointer; display: block; width: 100%; }
+        label { display: block; margin-top: 10px; font-size: 12px; color: #666; }
+        input, select {
+            width: 100%; padding: 7px; margin-top: 3px;
+            border: 1px solid #ccc; border-radius: 4px; font-size: 13px; background: #fff;
+        }
+
+        /* 품목 */
+        .item-block { border: 1px solid #e2e8f0; border-radius: 6px; padding: 12px; margin-top: 10px; position: relative; background: #f8fafc; }
+        .item-block h4 { margin: 0 0 8px; font-size: 13px; color: #475569; }
+        .remove-btn { position: absolute; top: 10px; right: 10px; background: #ef4444; color: #fff; border: none; border-radius: 4px; padding: 3px 10px; cursor: pointer; font-size: 12px; }
+        .add-btn { margin-top: 10px; padding: 7px 18px; background: #64748b; color: #fff; border: none; border-radius: 4px; cursor: pointer; font-size: 13px; }
+
+        /* 버튼 */
+        .submit-btn {
+            margin-top: 24px; padding: 12px; background: #2563eb; color: #fff;
+            border: none; border-radius: 6px; font-size: 15px; cursor: pointer; width: 100%; font-weight: 600;
+        }
         .submit-btn:hover { background: #1d4ed8; }
-        #result { margin-top: 20px; padding: 16px; background: #f1f5f9; border-radius: 6px; white-space: pre-wrap; font-size: 13px; display: none; }
+        .search-btn {
+            margin-top: 20px; padding: 11px; background: #0891b2; color: #fff;
+            border: none; border-radius: 6px; font-size: 15px; cursor: pointer; width: 100%; font-weight: 600;
+        }
+        .search-btn:hover { background: #0e7490; }
+
+        /* 결과 */
+        .result-box { margin-top: 16px; padding: 14px; background: #f1f5f9; border-radius: 6px; white-space: pre-wrap; font-size: 12px; display: none; max-height: 300px; overflow-y: auto; }
+
+        /* 조회 결과 테이블 */
+        .result-meta { margin-top: 16px; font-size: 13px; color: #475569; display: none; }
+        .result-meta span { font-weight: 700; color: #0f172a; }
+        .result-table-wrap { margin-top: 10px; overflow-x: auto; display: none; }
+        table { border-collapse: collapse; width: 100%; font-size: 12px; }
+        th { background: #1e40af; color: #fff; padding: 8px 10px; text-align: left; white-space: nowrap; }
+        td { padding: 7px 10px; border-bottom: 1px solid #e2e8f0; white-space: nowrap; }
+        tr:hover td { background: #f0f9ff; }
+        tr:nth-child(even) td { background: #f8fafc; }
+        tr:nth-child(even):hover td { background: #f0f9ff; }
+        .badge { display: inline-block; padding: 2px 8px; border-radius: 12px; font-size: 11px; font-weight: 600; }
+        .badge-success { background: #dcfce7; color: #166534; }
+        .badge-fail { background: #fee2e2; color: #991b1b; }
     </style>
 </head>
 <body>
-    <h2>세금계산서 역발행</h2>
 
-    <h3>기본 정보</h3>
-    <div class="grid">
-        <div>
-            <label>사업자번호 (CORP_BIZ_NO)</label>
-            <input id="corpBizNo" value="1058111908">
-        </div>
-        <div>
-            <label>ERP 사용자 ID (ERP_USER_MAKE_ID)</label>
-            <input id="erpUserMakeId" value="202410150003">
-        </div>
-        <div>
-            <label>문서유형 (DOCUMENT_TYPE)</label>
-            <input id="documentType" value="00">
-        </div>
-        <div>
-            <label>세금유형 (TAX_TYPE)</label>
-            <input id="taxType" value="0">
-        </div>
-        <div>
-            <label>작성일자 (MAKE_DATE)</label>
-            <input id="makeDate" value="20260331">
-        </div>
-        <div>
-            <label>거래유형 (TRAN_TYPE)</label>
-            <input id="tranType" value="01">
-        </div>
-        <div>
-            <label>수정사유 (MOD_REASON)</label>
-            <input id="modReason" value="">
-        </div>
-        <div>
-            <label>원본발행ID (ORI_ISSUE_ID)</label>
-            <input id="oriIssueId" value="">
-        </div>
-        <div>
-            <label>SMS 발송여부 (SMS_GB)</label>
-            <input id="smsGb" value="N">
-        </div>
-        <div>
-            <label>비고 (BIGO)</label>
-            <input id="bigo" value="BIGO TEST">
-        </div>
+    <div class="tabs">
+        <button class="tab-btn active" onclick="switchTab('issue')">세금계산서 발행</button>
+        <button class="tab-btn" onclick="switchTab('list')">세금계산서 조회</button>
+        <button class="tab-btn" onclick="switchTab('state')">상태 조회</button>
     </div>
 
-    <h3>금액</h3>
-    <div class="grid">
-        <div>
-            <label>공급가액 (SUPPLY_AMT)</label>
-            <input id="supplyAmt" value="1000">
+    <!-- ===== 발행 탭 ===== -->
+    <div id="tab-issue" class="tab-content active">
+
+        <h3>기본 정보</h3>
+        <div class="grid">
+            <div><label>사업자번호 (CORP_BIZ_NO)</label><input id="corpBizNo" value="1058111908"></div>
+            <div><label>ERP 사용자 ID (ERP_USER_MAKE_ID)</label><input id="erpUserMakeId" value="202410150003"></div>
+            <div><label>문서유형 (DOCUMENT_TYPE)</label><input id="documentType" value="00"></div>
+            <div><label>세금유형 (TAX_TYPE)</label><input id="taxType" value="0"></div>
+            <div><label>작성일자 (MAKE_DATE)</label><input id="makeDate" value="20260331"></div>
+            <div><label>거래유형 (TRAN_TYPE)</label><input id="tranType" value="01"></div>
+            <div><label>수정사유 (MOD_REASON)</label><input id="modReason" value=""></div>
+            <div><label>원본발행ID (ORI_ISSUE_ID)</label><input id="oriIssueId" value=""></div>
+            <div><label>SMS 발송여부 (SMS_GB)</label><input id="smsGb" value="N"></div>
+            <div><label>비고 (BIGO)</label><input id="bigo" value="BIGO TEST"></div>
         </div>
-        <div>
-            <label>세액 (TAX_AMT)</label>
-            <input id="taxAmt" value="100">
+
+        <h3>금액</h3>
+        <div class="grid">
+            <div><label>공급가액 (SUPPLY_AMT)</label><input id="supplyAmt" value="1000"></div>
+            <div><label>세액 (TAX_AMT)</label><input id="taxAmt" value="100"></div>
+            <div><label>합계금액 (TOTAL_AMT)</label><input id="totalAmt" value="1100"></div>
+            <div><label>현금 (CASH_AMT)</label><input id="cashAmt" value=""></div>
+            <div><label>수표 (CHECK_AMT)</label><input id="checkAmt" value=""></div>
+            <div><label>어음 (BILL_AMT)</label><input id="billAmt" value=""></div>
+            <div><label>미수금 (UNCOLLECT_AMT)</label><input id="uncollectAmt" value=""></div>
         </div>
-        <div>
-            <label>합계금액 (TOTAL_AMT)</label>
-            <input id="totalAmt" value="1100">
+
+        <h3>공급자 정보</h3>
+        <div class="grid">
+            <div><label>사업자번호 (COMP_REGISTER_NO)</label><input id="compRegisterNo" value="2148159394"></div>
+            <div><label>종사업장 (COMP_SUB_ID)</label><input id="compSubId" value="2222"></div>
+            <div><label>상호 (COMP_NAME)</label><input id="compName" value="기웅테스트"></div>
+            <div><label>대표자 (COMP_REPRESENT)</label><input id="compRepresent" value="한경민"></div>
+            <div><label>업태 (COMP_BIZ_STATE)</label><input id="compBizState" value="공급자업태"></div>
+            <div><label>업종 (COMP_BIZ_CATEGORY)</label><input id="compBizCategory" value="공급자업종"></div>
+            <div><label>우편번호 (COMP_ZIP_CODE)</label><input id="compZipCode" value="11111"></div>
+            <div><label>주소 (COMP_ADDRESS1)</label><input id="compAddress1" value="공급자주소"></div>
+            <div><label>상세주소 (COMP_ADDRESS2)</label><input id="compAddress2" value="공급자상세주소"></div>
         </div>
-        <div>
-            <label>현금 (CASH_AMT)</label>
-            <input id="cashAmt" value="">
+
+        <h3>담당자 정보 (공급자측)</h3>
+        <div class="grid">
+            <div><label>담당자명 (MEMBER_NM)</label><input id="memberNm" value="박귀열"></div>
+            <div><label>전화번호1 (MEMBER_TEL_NO1)</label><input id="memberTelNo1" value="010"></div>
+            <div><label>전화번호2 (MEMBER_TEL_NO2)</label><input id="memberTelNo2" value="2437"></div>
+            <div><label>전화번호3 (MEMBER_TEL_NO3)</label><input id="memberTelNo3" value="2439"></div>
+            <div><label>이메일 (MEMBER_EMAIL)</label><input id="memberEmail" value="gypark@shinwon.com"></div>
+            <div><label>부서 (MEMBER_POST)</label><input id="memberPost" value="부서"></div>
         </div>
-        <div>
-            <label>수표 (CHECK_AMT)</label>
-            <input id="checkAmt" value="">
+
+        <h3>공급받는자 정보</h3>
+        <div class="grid">
+            <div><label>사업자번호 (CUST_REGISTER_NO)</label><input id="custRegisterNo" value="1231231212"></div>
+            <div><label>종사업장 (CUST_SUB_ID)</label><input id="custSubId" value="9999"></div>
+            <div><label>상호 (CUST_NAME)</label><input id="custName" value="CUST NAME TEST"></div>
+            <div><label>대표자 (CUST_REPRESENT)</label><input id="custRepresent" value="TEST"></div>
+            <div><label>업태 (CUST_BIZ_STATE)</label><input id="custBizState" value="CUST STATE"></div>
+            <div><label>업종 (CUST_BIZ_CATEGORY)</label><input id="custBizCategory" value="CUST CATE"></div>
+            <div><label>우편번호 (CUST_ZIP_CODE)</label><input id="custZipCode" value="22222"></div>
+            <div><label>주소 (CUST_ADDRESS1)</label><input id="custAddress1" value="CUST ADDR"></div>
+            <div><label>상세주소 (CUST_ADDRESS2)</label><input id="custAddress2" value="CUST ADDR2"></div>
+            <div><label>구분 (CUST_KIND)</label><input id="custKind" value=""></div>
         </div>
-        <div>
-            <label>어음 (BILL_AMT)</label>
-            <input id="billAmt" value="">
+
+        <h3>수신담당자1</h3>
+        <div class="grid">
+            <div><label>담당자명 (MANAGER_NM)</label><input id="managerNm" value="MANA NAME"></div>
+            <div><label>전화번호1 (MANAGER_TEL_NO1)</label><input id="managerTelNo1" value="010"></div>
+            <div><label>전화번호2 (MANAGER_TEL_NO2)</label><input id="managerTelNo2" value="2222"></div>
+            <div><label>전화번호3 (MANAGER_TEL_NO3)</label><input id="managerTelNo3" value="3333"></div>
+            <div><label>이메일 (MANAGER_EMAIL)</label><input id="managerEmail" value="TEST@shinwon.com"></div>
+            <div><label>부서 (MANAGER_POST)</label><input id="managerPost" value="TEST DEPT"></div>
         </div>
-        <div>
-            <label>미수금 (UNCOLLECT_AMT)</label>
-            <input id="uncollectAmt" value="">
+
+        <h3>수신담당자2</h3>
+        <div class="grid">
+            <div><label>담당자명 (MANAGER2_NM)</label><input id="manager2Nm" value="MANA NAME2"></div>
+            <div><label>전화번호1 (MANAGER2_TEL_NO1)</label><input id="manager2TelNo1" value="010"></div>
+            <div><label>전화번호2 (MANAGER2_TEL_NO2)</label><input id="manager2TelNo2" value="4444"></div>
+            <div><label>전화번호3 (MANAGER2_TEL_NO3)</label><input id="manager2TelNo3" value="5555"></div>
+            <div><label>이메일 (MANAGER2_EMAIL)</label><input id="manager2Email" value="TEST2@shinwon.com"></div>
+            <div><label>부서 (MANAGER2_POST)</label><input id="manager2Post" value="TEST DEPT2"></div>
         </div>
+
+        <h3>기타</h3>
+        <div class="grid">
+            <div><label>장부번호1 (BOOK_NO1)</label><input id="bookNo1" value="001"></div>
+            <div><label>장부번호2 (BOOK_NO2)</label><input id="bookNo2" value="002"></div>
+            <div><label>일련번호 (SERIAL_NO)</label><input id="serialNo" value="003"></div>
+        </div>
+
+        <h3>품목 목록 (IT_ITEMLIST)</h3>
+        <div id="itemList"></div>
+        <button class="add-btn" onclick="addItem()">+ 품목 추가</button>
+
+        <button class="submit-btn" onclick="issue()">세금계산서 발행</button>
+        <div id="issueResult" class="result-box"></div>
     </div>
 
-    <h3>공급자 정보</h3>
-    <div class="grid">
-        <div>
-            <label>공급자 사업자번호 (COMP_REGISTER_NO)</label>
-            <input id="compRegisterNo" value="2148159394">
+    <!-- ===== 조회 탭 ===== -->
+    <div id="tab-list" class="tab-content">
+
+        <h3>조회 조건</h3>
+        <div class="grid">
+            <div>
+                <label>사업자번호 (CORP_BIZ_NO)</label>
+                <input id="l-corpBizNo" value="1058111908">
+            </div>
+            <div>
+                <label>계산서 구분 (CATEGORY)</label>
+                <select id="l-category">
+                    <option value="T">T - 전자세금계산서</option>
+                    <option value="C">C - 전자계산서</option>
+                </select>
+            </div>
+            <div>
+                <label>매출/매입 구분 (DOC_TYPE)</label>
+                <select id="l-docType">
+                    <option value="S">S - 매출</option>
+                    <option value="B">B - 매입</option>
+                </select>
+            </div>
+            <div>
+                <label>발행유형 (ISSUE_TYPE)</label>
+                <select id="l-issueType">
+                    <option value="0">0 - 전체</option>
+                    <option value="1">1 - 정발행</option>
+                    <option value="2">2 - 역발행</option>
+                </select>
+            </div>
+            <div>
+                <label>품목 포함 (ITEM_LIST)</label>
+                <select id="l-itemList">
+                    <option value="Y">Y - 포함</option>
+                    <option value="N">N - 미포함</option>
+                </select>
+            </div>
         </div>
-        <div>
-            <label>공급자 종사업장 (COMP_SUB_ID)</label>
-            <input id="compSubId" value="2222">
+
+        <button class="search-btn" onclick="listSearch()">조회</button>
+
+        <div id="listMeta" class="result-meta"></div>
+        <div id="listTableWrap" class="result-table-wrap">
+            <table id="listTable">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>작성일</th>
+                        <th>발행일</th>
+                        <th>승인번호</th>
+                        <th>공급자</th>
+                        <th>공급받는자</th>
+                        <th>공급가액</th>
+                        <th>세액</th>
+                        <th>합계</th>
+                        <th>구분</th>
+                        <th>유형</th>
+                    </tr>
+                </thead>
+                <tbody id="listBody"></tbody>
+            </table>
         </div>
-        <div>
-            <label>공급자 상호 (COMP_NAME)</label>
-            <input id="compName" value="기웅테스트">
-        </div>
-        <div>
-            <label>공급자 대표자 (COMP_REPRESENT)</label>
-            <input id="compRepresent" value="한경민">
-        </div>
-        <div>
-            <label>업태 (COMP_BIZ_STATE)</label>
-            <input id="compBizState" value="공급자업태">
-        </div>
-        <div>
-            <label>업종 (COMP_BIZ_CATEGORY)</label>
-            <input id="compBizCategory" value="공급자업종">
-        </div>
-        <div>
-            <label>우편번호 (COMP_ZIP_CODE)</label>
-            <input id="compZipCode" value="11111">
-        </div>
-        <div>
-            <label>주소 (COMP_ADDRESS1)</label>
-            <input id="compAddress1" value="공급자주소">
-        </div>
-        <div>
-            <label>상세주소 (COMP_ADDRESS2)</label>
-            <input id="compAddress2" value="공급자상세주소">
-        </div>
+        <div id="listRawResult" class="result-box"></div>
     </div>
 
-    <h3>담당자 정보 (공급자측)</h3>
-    <div class="grid">
-        <div>
-            <label>담당자명 (MEMBER_NM)</label>
-            <input id="memberNm" value="박귀열">
+    <!-- ===== 상태 조회 탭 ===== -->
+    <div id="tab-state" class="tab-content">
+
+        <h3>조회 조건</h3>
+        <div class="grid">
+            <div>
+                <label>사업자번호 (CORP_BIZ_NO)</label>
+                <input id="s-corpBizNo" value="1058111908">
+            </div>
+            <div>
+                <label>날짜 유형 (DATE_TYPE)</label>
+                <select id="s-dateType">
+                    <option value="01">01 - 작성일</option>
+                    <option value="02">02 - 발행일</option>
+                    <option value="03">03 - 전송일</option>
+                </select>
+            </div>
+            <div>
+                <label>시작일 (START_DATE)</label>
+                <input id="s-startDate" value="20250101">
+            </div>
+            <div>
+                <label>종료일 (END_DATE)</label>
+                <input id="s-endDate" value="20250131">
+            </div>
+            <div>
+                <label>ERP 사용자 ID (ERP_USER_MAKE_ID)</label>
+                <input id="s-erpUserMakeId" value="">
+            </div>
         </div>
-        <div>
-            <label>전화번호1 (MEMBER_TEL_NO1)</label>
-            <input id="memberTelNo1" value="010">
+
+        <button class="search-btn" onclick="stateSearch()">상태 조회</button>
+
+        <div id="stateMeta" class="result-meta"></div>
+        <div id="stateTableWrap" class="result-table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>ERP 사용자 ID</th>
+                        <th>발행일</th>
+                        <th>상태</th>
+                        <th>상태명</th>
+                        <th>상태일시</th>
+                        <th>결과코드</th>
+                        <th>결과메시지</th>
+                        <th>삭제여부</th>
+                        <th>ISSUE_ID</th>
+                    </tr>
+                </thead>
+                <tbody id="stateBody"></tbody>
+            </table>
         </div>
-        <div>
-            <label>전화번호2 (MEMBER_TEL_NO2)</label>
-            <input id="memberTelNo2" value="2437">
-        </div>
-        <div>
-            <label>전화번호3 (MEMBER_TEL_NO3)</label>
-            <input id="memberTelNo3" value="2439">
-        </div>
-        <div>
-            <label>이메일 (MEMBER_EMAIL)</label>
-            <input id="memberEmail" value="gypark@shinwon.com">
-        </div>
-        <div>
-            <label>부서 (MEMBER_POST)</label>
-            <input id="memberPost" value="부서">
-        </div>
+        <div id="stateRawResult" class="result-box"></div>
     </div>
-
-    <h3>공급받는자 정보</h3>
-    <div class="grid">
-        <div>
-            <label>사업자번호 (CUST_REGISTER_NO)</label>
-            <input id="custRegisterNo" value="1231231212">
-        </div>
-        <div>
-            <label>종사업장 (CUST_SUB_ID)</label>
-            <input id="custSubId" value="9999">
-        </div>
-        <div>
-            <label>상호 (CUST_NAME)</label>
-            <input id="custName" value="CUST NAME TEST">
-        </div>
-        <div>
-            <label>대표자 (CUST_REPRESENT)</label>
-            <input id="custRepresent" value="TEST">
-        </div>
-        <div>
-            <label>업태 (CUST_BIZ_STATE)</label>
-            <input id="custBizState" value="CUST STATE">
-        </div>
-        <div>
-            <label>업종 (CUST_BIZ_CATEGORY)</label>
-            <input id="custBizCategory" value="CUST CATE">
-        </div>
-        <div>
-            <label>우편번호 (CUST_ZIP_CODE)</label>
-            <input id="custZipCode" value="22222">
-        </div>
-        <div>
-            <label>주소 (CUST_ADDRESS1)</label>
-            <input id="custAddress1" value="CUST ADDR">
-        </div>
-        <div>
-            <label>상세주소 (CUST_ADDRESS2)</label>
-            <input id="custAddress2" value="CUST ADDR2">
-        </div>
-        <div>
-            <label>구분 (CUST_KIND)</label>
-            <input id="custKind" value="">
-        </div>
-    </div>
-
-    <h3>수신담당자1</h3>
-    <div class="grid">
-        <div>
-            <label>담당자명 (MANAGER_NM)</label>
-            <input id="managerNm" value="MANA NAME">
-        </div>
-        <div>
-            <label>전화번호1 (MANAGER_TEL_NO1)</label>
-            <input id="managerTelNo1" value="010">
-        </div>
-        <div>
-            <label>전화번호2 (MANAGER_TEL_NO2)</label>
-            <input id="managerTelNo2" value="2222">
-        </div>
-        <div>
-            <label>전화번호3 (MANAGER_TEL_NO3)</label>
-            <input id="managerTelNo3" value="3333">
-        </div>
-        <div>
-            <label>이메일 (MANAGER_EMAIL)</label>
-            <input id="managerEmail" value="TEST@shinwon.com">
-        </div>
-        <div>
-            <label>부서 (MANAGER_POST)</label>
-            <input id="managerPost" value="TEST DEPT">
-        </div>
-    </div>
-
-    <h3>수신담당자2</h3>
-    <div class="grid">
-        <div>
-            <label>담당자명 (MANAGER2_NM)</label>
-            <input id="manager2Nm" value="MANA NAME2">
-        </div>
-        <div>
-            <label>전화번호1 (MANAGER2_TEL_NO1)</label>
-            <input id="manager2TelNo1" value="010">
-        </div>
-        <div>
-            <label>전화번호2 (MANAGER2_TEL_NO2)</label>
-            <input id="manager2TelNo2" value="4444">
-        </div>
-        <div>
-            <label>전화번호3 (MANAGER2_TEL_NO3)</label>
-            <input id="manager2TelNo3" value="5555">
-        </div>
-        <div>
-            <label>이메일 (MANAGER2_EMAIL)</label>
-            <input id="manager2Email" value="TEST2@shinwon.com">
-        </div>
-        <div>
-            <label>부서 (MANAGER2_POST)</label>
-            <input id="manager2Post" value="TEST DEPT2">
-        </div>
-    </div>
-
-    <h3>기타</h3>
-    <div class="grid">
-        <div>
-            <label>장부번호1 (BOOK_NO1)</label>
-            <input id="bookNo1" value="001">
-        </div>
-        <div>
-            <label>장부번호2 (BOOK_NO2)</label>
-            <input id="bookNo2" value="002">
-        </div>
-        <div>
-            <label>일련번호 (SERIAL_NO)</label>
-            <input id="serialNo" value="003">
-        </div>
-    </div>
-
-    <h3>품목 목록 (IT_ITEMLIST)</h3>
-    <div id="itemList"></div>
-    <button class="add-btn" onclick="addItem()">+ 품목 추가</button>
-
-    <button class="submit-btn" onclick="issue()">세금계산서 발행</button>
-    <div id="result"></div>
 
     <script>
+        // ── 탭 전환
+        function switchTab(name) {
+            document.querySelectorAll('.tab-btn').forEach((b, i) => {
+                b.classList.toggle('active', ['issue','list','state'][i] === name);
+            });
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            document.getElementById('tab-' + name).classList.add('active');
+        }
+
+        // ── 발행 탭
         let itemCount = 0;
 
         function addItem() {
@@ -318,10 +332,7 @@
             document.getElementById('itemList').appendChild(div);
         }
 
-        function removeItem(id) {
-            document.getElementById('item-' + id).remove();
-        }
-
+        function removeItem(id) { document.getElementById('item-' + id).remove(); }
         function val(id) { return document.getElementById(id).value; }
 
         async function issue() {
@@ -329,85 +340,53 @@
             document.querySelectorAll('.item-block').forEach(block => {
                 items.push({
                     erpUserMakeId: block.querySelector('.i-erpUserMakeId').value,
-                    detailNo:    block.querySelector('.i-detailNo').value,
-                    year:        block.querySelector('.i-year').value,
-                    month:       block.querySelector('.i-month').value,
-                    day:         block.querySelector('.i-day').value,
-                    articleNm:   block.querySelector('.i-articleNm').value,
-                    standard:    block.querySelector('.i-standard').value,
-                    quantity:    block.querySelector('.i-quantity').value,
-                    unitAmt:     block.querySelector('.i-unitAmt').value,
-                    supplyAmt:   block.querySelector('.i-supplyAmt').value,
-                    taxAmt:      block.querySelector('.i-taxAmt').value,
-                    bigo:        block.querySelector('.i-bigo').value,
+                    detailNo:      block.querySelector('.i-detailNo').value,
+                    year:          block.querySelector('.i-year').value,
+                    month:         block.querySelector('.i-month').value,
+                    day:           block.querySelector('.i-day').value,
+                    articleNm:     block.querySelector('.i-articleNm').value,
+                    standard:      block.querySelector('.i-standard').value,
+                    quantity:      block.querySelector('.i-quantity').value,
+                    unitAmt:       block.querySelector('.i-unitAmt').value,
+                    supplyAmt:     block.querySelector('.i-supplyAmt').value,
+                    taxAmt:        block.querySelector('.i-taxAmt').value,
+                    bigo:          block.querySelector('.i-bigo').value,
                 });
             });
 
             const body = {
-                corpBizNo:        val('corpBizNo'),
-                erpUserMakeId:    val('erpUserMakeId'),
-                documentType:     val('documentType'),
-                modReason:        val('modReason'),
-                oriIssueId:       val('oriIssueId'),
-                taxType:          val('taxType'),
-                makeDate:         val('makeDate'),
-                tranType:         val('tranType'),
-                cashAmt:          val('cashAmt'),
-                checkAmt:         val('checkAmt'),
-                billAmt:          val('billAmt'),
-                uncollectAmt:     val('uncollectAmt'),
-                taxAmt:           val('taxAmt'),
-                supplyAmt:        val('supplyAmt'),
-                totalAmt:         val('totalAmt'),
-                compRegisterNo:   val('compRegisterNo'),
-                compSubId:        val('compSubId'),
-                compName:         val('compName'),
-                compRepresent:    val('compRepresent'),
-                compBizState:     val('compBizState'),
-                compBizCategory:  val('compBizCategory'),
-                compZipCode:      val('compZipCode'),
-                compAddress1:     val('compAddress1'),
-                compAddress2:     val('compAddress2'),
-                memberNm:         val('memberNm'),
-                memberTelNo1:     val('memberTelNo1'),
-                memberTelNo2:     val('memberTelNo2'),
-                memberTelNo3:     val('memberTelNo3'),
-                memberEmail:      val('memberEmail'),
-                memberPost:       val('memberPost'),
-                custKind:         val('custKind'),
-                custRegisterNo:   val('custRegisterNo'),
-                custSubId:        val('custSubId'),
-                custName:         val('custName'),
-                custRepresent:    val('custRepresent'),
-                custBizState:     val('custBizState'),
-                custBizCategory:  val('custBizCategory'),
-                custZipCode:      val('custZipCode'),
-                custAddress1:     val('custAddress1'),
-                custAddress2:     val('custAddress2'),
-                managerNm:        val('managerNm'),
-                managerTelNo1:    val('managerTelNo1'),
-                managerTelNo2:    val('managerTelNo2'),
-                managerTelNo3:    val('managerTelNo3'),
-                managerEmail:     val('managerEmail'),
-                managerPost:      val('managerPost'),
-                manager2Nm:       val('manager2Nm'),
-                manager2TelNo1:   val('manager2TelNo1'),
-                manager2TelNo2:   val('manager2TelNo2'),
-                manager2TelNo3:   val('manager2TelNo3'),
-                manager2Email:    val('manager2Email'),
-                manager2Post:     val('manager2Post'),
-                bigo:             val('bigo'),
-                bookNo1:          val('bookNo1'),
-                bookNo2:          val('bookNo2'),
-                serialNo:         val('serialNo'),
-                smsGb:            val('smsGb'),
-                items:            items
+                corpBizNo: val('corpBizNo'), erpUserMakeId: val('erpUserMakeId'),
+                documentType: val('documentType'), modReason: val('modReason'),
+                oriIssueId: val('oriIssueId'), taxType: val('taxType'),
+                makeDate: val('makeDate'), tranType: val('tranType'),
+                cashAmt: val('cashAmt'), checkAmt: val('checkAmt'),
+                billAmt: val('billAmt'), uncollectAmt: val('uncollectAmt'),
+                taxAmt: val('taxAmt'), supplyAmt: val('supplyAmt'), totalAmt: val('totalAmt'),
+                compRegisterNo: val('compRegisterNo'), compSubId: val('compSubId'),
+                compName: val('compName'), compRepresent: val('compRepresent'),
+                compBizState: val('compBizState'), compBizCategory: val('compBizCategory'),
+                compZipCode: val('compZipCode'), compAddress1: val('compAddress1'), compAddress2: val('compAddress2'),
+                memberNm: val('memberNm'), memberTelNo1: val('memberTelNo1'),
+                memberTelNo2: val('memberTelNo2'), memberTelNo3: val('memberTelNo3'),
+                memberEmail: val('memberEmail'), memberPost: val('memberPost'),
+                custKind: val('custKind'), custRegisterNo: val('custRegisterNo'),
+                custSubId: val('custSubId'), custName: val('custName'),
+                custRepresent: val('custRepresent'), custBizState: val('custBizState'),
+                custBizCategory: val('custBizCategory'), custZipCode: val('custZipCode'),
+                custAddress1: val('custAddress1'), custAddress2: val('custAddress2'),
+                managerNm: val('managerNm'), managerTelNo1: val('managerTelNo1'),
+                managerTelNo2: val('managerTelNo2'), managerTelNo3: val('managerTelNo3'),
+                managerEmail: val('managerEmail'), managerPost: val('managerPost'),
+                manager2Nm: val('manager2Nm'), manager2TelNo1: val('manager2TelNo1'),
+                manager2TelNo2: val('manager2TelNo2'), manager2TelNo3: val('manager2TelNo3'),
+                manager2Email: val('manager2Email'), manager2Post: val('manager2Post'),
+                bigo: val('bigo'), bookNo1: val('bookNo1'), bookNo2: val('bookNo2'),
+                serialNo: val('serialNo'), smsGb: val('smsGb'), items
             };
 
-            const resultDiv = document.getElementById('result');
+            const resultDiv = document.getElementById('issueResult');
             resultDiv.style.display = 'block';
             resultDiv.textContent = '요청 중...';
-
             try {
                 const res = await fetch('/reverse/tax-invoice/issue', {
                     method: 'POST',
@@ -421,7 +400,139 @@
             }
         }
 
-        // 기본 품목 1개 추가
+        // ── 조회 탭
+        function fmt(n) { return (n ?? 0).toLocaleString(); }
+
+        async function listSearch() {
+            const body = {
+                CORP_BIZ_NO: val('l-corpBizNo'),
+                CATEGORY:    document.getElementById('l-category').value,
+                DOC_TYPE:    document.getElementById('l-docType').value,
+                ISSUE_TYPE:  document.getElementById('l-issueType').value,
+                ITEM_LIST:   document.getElementById('l-itemList').value,
+            };
+
+            const meta    = document.getElementById('listMeta');
+            const tableWrap = document.getElementById('listTableWrap');
+            const rawDiv  = document.getElementById('listRawResult');
+            meta.style.display = 'none';
+            tableWrap.style.display = 'none';
+            rawDiv.style.display = 'block';
+            rawDiv.textContent = '조회 중...';
+
+            try {
+                const res = await fetch('/reverse/tax-invoice/list', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(body)
+                });
+                const data = await res.json();
+
+                rawDiv.style.display = 'none';
+
+                if (data.result !== 'SUCCESS' || !data.data) {
+                    rawDiv.style.display = 'block';
+                    rawDiv.textContent = JSON.stringify(data, null, 2);
+                    return;
+                }
+
+                const d = data.data;
+                meta.style.display = 'block';
+                meta.innerHTML = `총 <span>${d.ROW_CNT ?? 0}</span>건 조회 (잔여: ${d.ROW_REST_CNT ?? 0}건, 다음 페이지: ${d.IS_NEXT === 'Y' ? '있음' : '없음'})`;
+
+                const tbody = document.getElementById('listBody');
+                tbody.innerHTML = '';
+                (d.LIST ?? []).forEach((item, idx) => {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td>${idx + 1}</td>
+                        <td>${item.MAKE_DD ?? ''}</td>
+                        <td>${item.ISSUE_DD ?? ''}</td>
+                        <td style="font-size:11px">${item.APPR_NO ?? ''}</td>
+                        <td>${item.COMP_NM ?? ''}</td>
+                        <td>${item.CUST_NM ?? ''}</td>
+                        <td style="text-align:right">${fmt(item.AMT_SUPPLY)}</td>
+                        <td style="text-align:right">${fmt(item.AMT_TAX)}</td>
+                        <td style="text-align:right"><b>${fmt(item.AMT_TOT)}</b></td>
+                        <td>${item.CATEGORY_NM ?? ''}</td>
+                        <td>${item.ISSUE_TYPE_NM ?? ''}</td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+                tableWrap.style.display = 'block';
+
+            } catch (e) {
+                rawDiv.style.display = 'block';
+                rawDiv.textContent = '오류: ' + e.message;
+            }
+        }
+
+        // ── 상태 조회 탭
+        async function stateSearch() {
+            const body = {
+                CORP_BIZ_NO: val('s-corpBizNo'),
+                DATA: {
+                    DATE_TYPE:       document.getElementById('s-dateType').value,
+                    START_DATE:      val('s-startDate'),
+                    END_DATE:        val('s-endDate'),
+                    ERP_USER_MAKE_ID: val('s-erpUserMakeId'),
+                }
+            };
+
+            const meta      = document.getElementById('stateMeta');
+            const tableWrap = document.getElementById('stateTableWrap');
+            const rawDiv    = document.getElementById('stateRawResult');
+            meta.style.display = 'none';
+            tableWrap.style.display = 'none';
+            rawDiv.style.display = 'block';
+            rawDiv.textContent = '조회 중...';
+
+            try {
+                const res = await fetch('/reverse/tax-invoice/state', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(body)
+                });
+                const data = await res.json();
+                rawDiv.style.display = 'none';
+
+                if (data.result !== 'SUCCESS' || !data.data) {
+                    rawDiv.style.display = 'block';
+                    rawDiv.textContent = JSON.stringify(data, null, 2);
+                    return;
+                }
+
+                const d = data.data;
+                meta.style.display = 'block';
+                meta.innerHTML = `총 <span>${d.TOTCNT ?? 0}</span>건 조회`;
+
+                const tbody = document.getElementById('stateBody');
+                tbody.innerHTML = '';
+                (d.LIST ?? []).forEach((item, idx) => {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td>${idx + 1}</td>
+                        <td>${item.ERP_USER_MAKE_ID ?? ''}</td>
+                        <td>${item.ISSUE_DATE ?? ''}</td>
+                        <td>${item.DOC_STATE ?? ''}</td>
+                        <td>${item.DOC_STATE_NM ?? ''}</td>
+                        <td>${item.DOC_STATE_DATE ?? ''}</td>
+                        <td>${item.RESULT_CODE ?? ''}</td>
+                        <td>${item.RESULT_MSG ?? ''}</td>
+                        <td>${item.DEL_FLAG ?? ''}</td>
+                        <td style="font-size:11px">${item.ISSUE_ID ?? ''}</td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+                tableWrap.style.display = 'block';
+
+            } catch (e) {
+                rawDiv.style.display = 'block';
+                rawDiv.textContent = '오류: ' + e.message;
+            }
+        }
+
+        // 기본 품목 1개
         addItem();
     </script>
 </body>

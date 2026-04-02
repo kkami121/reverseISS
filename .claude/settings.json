@@ -5,7 +5,10 @@
       "Bash(powershell.exe -Command \"Stop-Process -Id 47652 -Force\")",
       "Bash(powershell.exe -Command \"Stop-Process -Id 15724 -Force\")",
       "Bash(powershell.exe -Command \"[System.Environment]::GetEnvironmentVariable\\(''JAVA_HOME'', ''Machine''\\)\")",
-      "Read(//c/Users/gypark/AppData/Local/Programs/Eclipse Adoptium/jdk-17.0.14.7-hotspot/bin/**)"
+      "Read(//c/Users/gypark/AppData/Local/Programs/Eclipse Adoptium/jdk-17.0.14.7-hotspot/bin/**)",
+      "Bash(curl -s http://localhost:5004/reverse/)",
+      "Bash(JAVA_HOME=\"C:/Users/gypark/AppData/Local/Programs/Eclipse Adoptium/jdk-17.0.14.7-hotspot\" ./gradlew processResources)",
+      "Bash(JAVA_HOME=\"C:/Users/gypark/AppData/Local/Programs/Eclipse Adoptium/jdk-17.0.14.7-hotspot\" ./gradlew compileJava processResources)"
     ],
     "additionalDirectories": [
       "d:\\reverseISS"
