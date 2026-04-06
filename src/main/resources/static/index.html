@@ -82,6 +82,7 @@
             <div><label>세금유형 (TAX_TYPE)</label><input id="taxType" value="0"></div>
             <div><label>작성일자 (MAKE_DATE)</label><input id="makeDate" value="20260331"></div>
             <div><label>거래유형 (TRAN_TYPE)</label><input id="tranType" value="01"></div>
+            <div><label>전송구분 (TARGET_LEVEL)</label><input id="targetLevel" value=""></div>
             <div><label>수정사유 (MOD_REASON)</label><input id="modReason" value=""></div>
             <div><label>원본발행ID (ORI_ISSUE_ID)</label><input id="oriIssueId" value=""></div>
             <div><label>SMS 발송여부 (SMS_GB)</label><input id="smsGb" value="N"></div>
@@ -357,7 +358,7 @@
             const body = {
                 corpBizNo: val('corpBizNo'), erpUserMakeId: val('erpUserMakeId'),
                 documentType: val('documentType'), modReason: val('modReason'),
-                oriIssueId: val('oriIssueId'), taxType: val('taxType'),
+                oriIssueId: val('oriIssueId'), targetLevel: val('targetLevel'), taxType: val('taxType'),
                 makeDate: val('makeDate'), tranType: val('tranType'),
                 cashAmt: val('cashAmt'), checkAmt: val('checkAmt'),
                 billAmt: val('billAmt'), uncollectAmt: val('uncollectAmt'),
