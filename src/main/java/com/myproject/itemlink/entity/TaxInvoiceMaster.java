@@ -20,8 +20,6 @@ public class TaxInvoiceMaster {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // 기본
-    private String corpBizNo;
     private String erpUserMakeId;
     private String documentType;
     private String modReason;
@@ -40,58 +38,35 @@ public class TaxInvoiceMaster {
     private String supplyAmt;
     private String totalAmt;
 
-    // 공급자
+    // 공급처
     private String compRegisterNo;
-    private String compSubId;
     private String compName;
     private String compRepresent;
-    private String compBizState;
-    private String compBizCategory;
-    private String compZipCode;
     private String compAddress1;
     private String compAddress2;
 
-    // 담당자 (공급자측)
+    // 공급 담당자
     private String memberNm;
     private String memberTelNo1;
     private String memberTelNo2;
     private String memberTelNo3;
     private String memberEmail;
-    private String memberPost;
 
-    // 공급받는자
-    private String custKind;
+    // 매입처
     private String custRegisterNo;
-    private String custSubId;
     private String custName;
     private String custRepresent;
-    private String custBizState;
-    private String custBizCategory;
     private String custZipCode;
     private String custAddress1;
-    private String custAddress2;
 
-    // 수신담당자1
+    // 매입 담당자
     private String managerNm;
     private String managerTelNo1;
     private String managerTelNo2;
     private String managerTelNo3;
     private String managerEmail;
-    private String managerPost;
 
-    // 수신담당자2
-    private String manager2Nm;
-    private String manager2TelNo1;
-    private String manager2TelNo2;
-    private String manager2TelNo3;
-    private String manager2Email;
-    private String manager2Post;
-
-    // 기타
     private String bigo;
-    private String bookNo1;
-    private String bookNo2;
-    private String serialNo;
     private String smsGb;
 
     // 발행 결과
@@ -100,6 +75,7 @@ public class TaxInvoiceMaster {
     private String errMsg;
     private String rtn;
 
+    @Column(updatable = false)
     private LocalDateTime createdAt;
 
     @OneToMany(mappedBy = "master", cascade = CascadeType.ALL, orphanRemoval = true)

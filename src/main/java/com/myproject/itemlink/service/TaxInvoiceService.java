@@ -56,7 +56,6 @@ public class TaxInvoiceService {
 
     private KaccountingRequest buildRequest(TaxInvoiceRequest req) {
         KaccountingRequest request = new KaccountingRequest();
-        request.setCorpBizNo(req.getCorpBizNo());
 
         KaccountingRequest.ItHeader header = new KaccountingRequest.ItHeader();
         header.setErpUserMakeId(req.getErpUserMakeId());
@@ -75,12 +74,8 @@ public class TaxInvoiceService {
         header.setSupplyAmt(req.getSupplyAmt());
         header.setTotalAmt(req.getTotalAmt());
         header.setCompRegisterNo(req.getCompRegisterNo());
-        header.setCompSubId(req.getCompSubId());
         header.setCompName(req.getCompName());
         header.setCompRepresent(req.getCompRepresent());
-        header.setCompBizState(req.getCompBizState());
-        header.setCompBizCategory(req.getCompBizCategory());
-        header.setCompZipCode(req.getCompZipCode());
         header.setCompAddress1(req.getCompAddress1());
         header.setCompAddress2(req.getCompAddress2());
         header.setMemberNm(req.getMemberNm());
@@ -88,33 +83,17 @@ public class TaxInvoiceService {
         header.setMemberTelNo2(req.getMemberTelNo2());
         header.setMemberTelNo3(req.getMemberTelNo3());
         header.setMemberEmail(req.getMemberEmail());
-        header.setMemberPost(req.getMemberPost());
-        header.setCustKind(req.getCustKind());
         header.setCustRegisterNo(req.getCustRegisterNo());
-        header.setCustSubId(req.getCustSubId());
         header.setCustName(req.getCustName());
         header.setCustRepresent(req.getCustRepresent());
-        header.setCustBizState(req.getCustBizState());
-        header.setCustBizCategory(req.getCustBizCategory());
         header.setCustZipCode(req.getCustZipCode());
         header.setCustAddress1(req.getCustAddress1());
-        header.setCustAddress2(req.getCustAddress2());
         header.setManagerNm(req.getManagerNm());
         header.setManagerTelNo1(req.getManagerTelNo1());
         header.setManagerTelNo2(req.getManagerTelNo2());
         header.setManagerTelNo3(req.getManagerTelNo3());
         header.setManagerEmail(req.getManagerEmail());
-        header.setManagerPost(req.getManagerPost());
-        header.setManager2Nm(req.getManager2Nm());
-        header.setManager2TelNo1(req.getManager2TelNo1());
-        header.setManager2TelNo2(req.getManager2TelNo2());
-        header.setManager2TelNo3(req.getManager2TelNo3());
-        header.setManager2Email(req.getManager2Email());
-        header.setManager2Post(req.getManager2Post());
         header.setBigo(req.getBigo());
-        header.setBookNo1(req.getBookNo1());
-        header.setBookNo2(req.getBookNo2());
-        header.setSerialNo(req.getSerialNo());
         header.setSmsGb(req.getSmsGb());
         request.setItHeader(List.of(header));
 
@@ -144,8 +123,6 @@ public class TaxInvoiceService {
     private void save(TaxInvoiceRequest req, KaccountingResponse response) {
         TaxInvoiceMaster master = new TaxInvoiceMaster();
 
-        // 기본
-        master.setCorpBizNo(req.getCorpBizNo());
         master.setErpUserMakeId(req.getErpUserMakeId());
         master.setDocumentType(req.getDocumentType());
         master.setModReason(req.getModReason());
@@ -154,8 +131,6 @@ public class TaxInvoiceService {
         master.setTaxType(req.getTaxType());
         master.setMakeDate(req.getMakeDate());
         master.setTranType(req.getTranType());
-
-        // 금액
         master.setCashAmt(req.getCashAmt());
         master.setCheckAmt(req.getCheckAmt());
         master.setBillAmt(req.getBillAmt());
@@ -163,62 +138,29 @@ public class TaxInvoiceService {
         master.setTaxAmt(req.getTaxAmt());
         master.setSupplyAmt(req.getSupplyAmt());
         master.setTotalAmt(req.getTotalAmt());
-
-        // 공급자
         master.setCompRegisterNo(req.getCompRegisterNo());
-        master.setCompSubId(req.getCompSubId());
         master.setCompName(req.getCompName());
         master.setCompRepresent(req.getCompRepresent());
-        master.setCompBizState(req.getCompBizState());
-        master.setCompBizCategory(req.getCompBizCategory());
-        master.setCompZipCode(req.getCompZipCode());
         master.setCompAddress1(req.getCompAddress1());
         master.setCompAddress2(req.getCompAddress2());
-
-        // 담당자 (공급자측)
         master.setMemberNm(req.getMemberNm());
         master.setMemberTelNo1(req.getMemberTelNo1());
         master.setMemberTelNo2(req.getMemberTelNo2());
         master.setMemberTelNo3(req.getMemberTelNo3());
         master.setMemberEmail(req.getMemberEmail());
-        master.setMemberPost(req.getMemberPost());
-
-        // 공급받는자
-        master.setCustKind(req.getCustKind());
         master.setCustRegisterNo(req.getCustRegisterNo());
-        master.setCustSubId(req.getCustSubId());
         master.setCustName(req.getCustName());
         master.setCustRepresent(req.getCustRepresent());
-        master.setCustBizState(req.getCustBizState());
-        master.setCustBizCategory(req.getCustBizCategory());
         master.setCustZipCode(req.getCustZipCode());
         master.setCustAddress1(req.getCustAddress1());
-        master.setCustAddress2(req.getCustAddress2());
-
-        // 수신담당자1
         master.setManagerNm(req.getManagerNm());
         master.setManagerTelNo1(req.getManagerTelNo1());
         master.setManagerTelNo2(req.getManagerTelNo2());
         master.setManagerTelNo3(req.getManagerTelNo3());
         master.setManagerEmail(req.getManagerEmail());
-        master.setManagerPost(req.getManagerPost());
-
-        // 수신담당자2
-        master.setManager2Nm(req.getManager2Nm());
-        master.setManager2TelNo1(req.getManager2TelNo1());
-        master.setManager2TelNo2(req.getManager2TelNo2());
-        master.setManager2TelNo3(req.getManager2TelNo3());
-        master.setManager2Email(req.getManager2Email());
-        master.setManager2Post(req.getManager2Post());
-
-        // 기타
         master.setBigo(req.getBigo());
-        master.setBookNo1(req.getBookNo1());
-        master.setBookNo2(req.getBookNo2());
-        master.setSerialNo(req.getSerialNo());
         master.setSmsGb(req.getSmsGb());
 
-        // 발행 결과
         if (response != null) {
             master.setStatus(response.getResult());
             master.setErrCode(response.getErrCode());
@@ -230,7 +172,6 @@ public class TaxInvoiceService {
             master.setStatus("FAIL");
         }
 
-        // IT_ITEMLIST → detail
         if (req.getItems() != null) {
             req.getItems().forEach(i -> {
                 TaxInvoiceDetail detail = new TaxInvoiceDetail();

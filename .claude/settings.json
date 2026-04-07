@@ -8,7 +8,9 @@
       "Read(//c/Users/gypark/AppData/Local/Programs/Eclipse Adoptium/jdk-17.0.14.7-hotspot/bin/**)",
       "Bash(curl -s http://localhost:5004/reverse/)",
       "Bash(JAVA_HOME=\"C:/Users/gypark/AppData/Local/Programs/Eclipse Adoptium/jdk-17.0.14.7-hotspot\" ./gradlew processResources)",
-      "Bash(JAVA_HOME=\"C:/Users/gypark/AppData/Local/Programs/Eclipse Adoptium/jdk-17.0.14.7-hotspot\" ./gradlew compileJava processResources)"
+      "Bash(JAVA_HOME=\"C:/Users/gypark/AppData/Local/Programs/Eclipse Adoptium/jdk-17.0.14.7-hotspot\" ./gradlew compileJava processResources)",
+      "Bash(curl -s \"http://localhost:5004/reverse/actuator/env\")",
+      "Bash(curl -sv http://localhost:5004/reverse/)"
     ],
     "additionalDirectories": [
       "d:\\reverseISS"
