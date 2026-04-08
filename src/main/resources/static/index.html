@@ -96,6 +96,7 @@
             text-align: center; padding: 2px 3px; background: transparent;
         }
         .items-table td input:focus { outline: none; background: #f0f7ff; border-bottom-color: #1a56db; }
+        .items-table td input[readonly]:focus { outline: none; background: #f5f5f5; border-bottom-color: transparent; }
         .items-table td input.num { text-align: right; }
         .del-row { background: none; border: none; cursor: pointer; color: #ef4444; font-size: 14px; font-weight: 700; padding: 0 4px; }
 
@@ -219,45 +220,45 @@
                         <tr>
                             <td class="party-label-col comp-label-col" rowspan="6">공 급 자</td>
                             <td class="field-label">사업자등록번호</td>
-                            <td class="field-input"><input id="compRegisterNo" value="" placeholder="사업자등록번호"></td>
+                            <td class="field-input"><input id="compRegisterNo" value="2117861829" placeholder="사업자등록번호" maxlength="10" oninput="numOnly(this)"></td>
                         </tr>
                         <tr>
                             <td class="field-label">상호/대표자</td>
                             <td class="field-input half">
-                                <span><input id="compName" value="" placeholder="상호"></span>
-                                <span><input id="compRepresent" value="" placeholder="대표자"></span>
+                                <span><input id="compName" value="영동견본실" placeholder="상호"></span>
+                                <span><input id="compRepresent" value="장영수" placeholder="대표자"></span>
                             </td>
                         </tr>
                         <tr>
                             <td class="field-label">업태/업종</td>
                             <td class="field-input half">
-                                <span><input id="compBizState" value="" placeholder="업태"></span>
-                                <span><input id="compBizCategory" value="" placeholder="업종"></span>
+                                <span><input id="compBizState" value="SAMPLE" placeholder="업태"></span>
+                                <span><input id="compBizCategory" value="임가공" placeholder="업종"></span>
                             </td>
                         </tr>
                          <tr>
                             <td class="field-label">우편번호</td>
-                            <td class="field-input"><input id="custZipCode" value="" placeholder="우편번호"></td>
+                            <td class="field-input"><input id="compZipCode" value="04155" placeholder="우편번호" maxlength="5" oninput="numOnly(this)"></td>
                         </tr>
                         <tr>
                             <td class="field-label">주소/상세주소</td>
                              <td class="field-input half">
-                                <span><input id="compAddress1" value="" placeholder="공급자주소"></span>
-                                <span><input id="compAddress2" value="" placeholder="공급자상세주소"></span>
+                                <span><input id="compAddress1" value="서울시 마포구 독막로42길 7" placeholder="공급자주소"></span>
+                                <span><input id="compAddress2" value="지하1층" placeholder="공급자상세주소"></span>
                             </td>    
                         </tr>
                         <tr>
                             <td class="field-label">담당자</td>
                             <td class="field-input half">
-                                <span><input id="memberNm" value="" placeholder="성명"></span>
-                                <span><input id="memberEmail" value="" placeholder="이메일"></span>
+                                <span><input id="memberNm" value="장영수" placeholder="성명"></span>
+                                <span><input id="memberEmail" value="test@gmail.com" placeholder="이메일"></span>
                             </td>
                         </tr>
                         <tr>
                             <td class="party-label-col comp-label-col"></td>
                             <td class="field-label">연락처</td>
                             <td class="field-input half">
-                                <span><input id="memberTelNo1" value="" style="width:36px">-<input id="memberTelNo2" value="" style="width:44px">-<input id="memberTelNo3" value="" style="width:44px"></span>
+                                <span><input id="memberTelNo1" value="010" style="width:36px" maxlength="3" oninput="numOnly(this)">-<input id="memberTelNo2" value="0000" style="width:44px" maxlength="4" oninput="numOnly(this)">-<input id="memberTelNo3" value="0000" style="width:44px" maxlength="4" oninput="numOnly(this)"></span>
                             </td>
                         </tr>
                     </table>
@@ -269,7 +270,7 @@
                         <tr>
                             <td class="party-label-col cust-label-col" rowspan="6">공 급 받 는 자</td>
                             <td class="field-label">사업자등록번호</td>
-                            <td class="field-input"><input id="custRegisterNo" value="1058111908"></td>
+                            <td class="field-input"><input id="custRegisterNo" value="1058111908" maxlength="10" oninput="numOnly(this)"></td>
                         </tr>
                         <tr>
                             <td class="field-label">상호/대표자</td>
@@ -287,7 +288,7 @@
                         </tr>
                         <tr>
                             <td class="field-label">우편번호</td>
-                            <td class="field-input"><input id="custZipCode" value="22222"></td>
+                            <td class="field-input"><input id="custZipCode" value="04157" maxlength="5" oninput="numOnly(this)"></td>
                         </tr>
                         <tr>
                             <td class="field-label">주소/상세주소</td>
@@ -307,7 +308,7 @@
                             <td class="party-label-col cust-label-col"></td>
                             <td class="field-label">연락처</td>
                             <td class="field-input half">
-                                <span><input id="managerTelNo1" value="02" style="width:36px">-<input id="managerTelNo2" value="3274" style="width:44px">-<input id="managerTelNo3" value="6524" style="width:44px"></span>
+                                <span><input id="managerTelNo1" value="02" style="width:36px" maxlength="3" oninput="numOnly(this)">-<input id="managerTelNo2" value="3274" style="width:44px" maxlength="4" oninput="numOnly(this)">-<input id="managerTelNo3" value="6524" style="width:44px" maxlength="4" oninput="numOnly(this)"></span>
                             </td>
                         </tr>
                     </table>
@@ -326,7 +327,7 @@
                     <tr>
                         <th>작성일자</th>
                         <th>공급가액</th>
-                        <th>세&nbsp;&nbsp;&nbsp;&nbsp;액</th>
+                        <th>세액</th>
                         <th>합계금액</th>
                     </tr>
                 </thead>
@@ -341,7 +342,7 @@
             </table>
             <table class="inv-bigo-table">
                 <tr>
-                    <th style="width:60px">비&nbsp;&nbsp;&nbsp;고</th>
+                    <th style="width:60px">비고</th>
                     <td><input id="bigo" class="bigo-input" value=""></td>
                 </tr>
             </table>
@@ -350,18 +351,18 @@
             <table class="inv-payment-table">
                 <thead>
                     <tr>
-                        <th>현&nbsp;&nbsp;&nbsp;&nbsp;금</th>
-                        <th>수&nbsp;&nbsp;&nbsp;&nbsp;표</th>
-                        <th>어&nbsp;&nbsp;&nbsp;&nbsp;음</th>
+                        <th>현금</th>
+                        <th>수표</th>
+                        <th>어음</th>
                         <th>외상미수금</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
-                        <td><input id="cashAmt" value="" placeholder="0"></td>
-                        <td><input id="checkAmt" value="" placeholder="0"></td>
-                        <td><input id="billAmt" value="" placeholder="0"></td>
-                        <td><input id="uncollectAmt" value="" placeholder="0"></td>
+                        <td><input id="cashAmt" value="" placeholder="0" oninput="numComma(this)"></td>
+                        <td><input id="checkAmt" value="" placeholder="0" oninput="numComma(this)"></td>
+                        <td><input id="billAmt" value="" placeholder="0" oninput="numComma(this)"></td>
+                        <td><input id="uncollectAmt" value="" placeholder="0" oninput="numComma(this)"></td>
                     </tr>
                 </tbody>
             </table>
@@ -375,20 +376,18 @@
                 <table class="items-table">
                     <thead>
                         <tr>
-                            <th style="width:24px">#</th>
-                            <th style="width:36px">ERP ID</th>
-                            <th style="width:28px">순번</th>
+                            <th style="width:20px">순번</th>
                             <th style="width:30px">연도</th>
-                            <th style="width:24px">월</th>
-                            <th style="width:24px">일</th>
-                            <th>품목명</th>
-                            <th style="width:60px">규격</th>
-                            <th style="width:44px">수량</th>
+                            <th style="width:20px">월</th>
+                            <th style="width:20px">일</th>
+                            <th style="width:200px">품목명</th>
+                            <th style="width:40px">규격</th>
+                            <th style="width:45px">수량</th>
                             <th style="width:70px">단가</th>
                             <th style="width:76px">공급가액</th>
                             <th style="width:64px">세액</th>
-                            <th style="width:70px">비고</th>
-                            <th style="width:28px"></th>
+                            <th style="width:100px">비고</th>
+                            <th style="width:25px"></th>
                         </tr>
                     </thead>
                     <tbody id="itemList"></tbody>
@@ -513,14 +512,18 @@
 
         // 품목 합계 재계산
         function recalc() {
-            let supply = 0, tax = 0;
+            let totalSupply = 0, totalTax = 0;
             document.querySelectorAll('#itemList tr').forEach(tr => {
-                supply += parseInt(tr.querySelector('.i-supplyAmt').value.replace(/,/g, '') || '0');
-                tax    += parseInt(tr.querySelector('.i-taxAmt').value.replace(/,/g, '') || '0');
+                const qty  = parseInt(tr.querySelector('.i-quantity').value.replace(/,/g, '') || '0');
+                const unit = parseInt(tr.querySelector('.i-unitAmt').value.replace(/,/g, '') || '0');
+                const rowSupply = qty * unit;
+                tr.querySelector('.i-supplyAmt').value = rowSupply === 0 ? '' : rowSupply.toLocaleString();
+                totalSupply += rowSupply;
+                totalTax    += parseInt(tr.querySelector('.i-taxAmt').value.replace(/,/g, '') || '0');
             });
-            document.getElementById('supplyAmt').value = supply.toLocaleString();
-            document.getElementById('taxAmt').value    = tax.toLocaleString();
-            document.getElementById('totalAmt').value  = (supply + tax).toLocaleString();
+            document.getElementById('supplyAmt').value = totalSupply.toLocaleString();
+            document.getElementById('taxAmt').value    = totalTax.toLocaleString();
+            document.getElementById('totalAmt').value  = (totalSupply + totalTax).toLocaleString();
         }
 
         function addItem() {
@@ -528,26 +531,26 @@
             const tbody = document.getElementById('itemList');
             const tr = document.createElement('tr');
             tr.id = 'item-' + itemCount;
-            const today = todayStr();
             tr.innerHTML = `
-                <td>${itemCount}</td>
-                <td><input class="i-erpUserMakeId" value="202410150003"></td>
-                <td><input class="i-detailNo" value="${itemCount}"></td>
-                <td><input class="i-year" value="${today.substring(0,4)}"></td>
-                <td><input class="i-month" value="${today.substring(4,6)}"></td>
-                <td><input class="i-day" value="${today.substring(6,8)}"></td>
+                <td><input class="i-detailNo" value="${itemCount}" readonly style="background:#f5f5f5;cursor:default;text-align:center;"></td>
+                <td><input class="i-year" value="2026" maxlength="4"></td>
+                <td><input class="i-month" value="04" maxlength="2"></td>
+                <td><input class="i-day" value="01" maxlength="2"></td>
                 <td><input class="i-articleNm" value=""></td>
                 <td><input class="i-standard" value=""></td>
                 <td><input class="i-quantity num" value=""></td>
                 <td><input class="i-unitAmt num" value=""></td>
-                <td><input class="i-supplyAmt num" value="0"></td>
-                <td><input class="i-taxAmt num" value="0"></td>
+                <td><input class="i-supplyAmt num" readonly style="background:#f5f5f5;cursor:default;" value=""></td>
+                <td><input class="i-taxAmt num" value=""></td>
                 <td><input class="i-bigo" value=""></td>
                 <td><button class="del-row" onclick="removeItem(${itemCount})">✕</button></td>
             `;
             tbody.appendChild(tr);
-            tr.querySelectorAll('.i-supplyAmt, .i-taxAmt').forEach(input => {
-                input.addEventListener('input', recalc);
+            tr.querySelectorAll('.i-year, .i-month, .i-day').forEach(input => {
+                input.addEventListener('input', e => numOnly(e.target));
+            });
+            tr.querySelectorAll('.i-quantity, .i-unitAmt, .i-taxAmt').forEach(input => {
+                input.addEventListener('input', e => { numComma(e.target); recalc(); });
             });
             recalc();
         }
@@ -559,12 +562,100 @@
         }
 
         function val(id) { return document.getElementById(id).value; }
+        function numOnly(el) { el.value = el.value.replace(/\D/g, ''); }
+        function numComma(el) {
+            const raw = el.value.replace(/\D/g, '');
+            el.value = raw === '' ? '' : raw.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+        }
+        function isValidEmail(v) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim()); }
 
         async function issue() {
+            // 필수값 검증
+            const required = [
+                { id: 'compRegisterNo', label: '공급자 사업자번호' },
+                { id: 'compName',       label: '공급자 상호' },
+                { id: 'compRepresent',  label: '공급자 대표자명' },
+                { id: 'compAddress1',   label: '공급자 기본주소' },
+                { id: 'compAddress2',   label: '공급자 상세주소' },
+                { id: 'memberNm',       label: '공급자 담당자명' },
+                { id: 'memberTelNo1',   label: '공급자 담당자 연락처' },
+                { id: 'memberTelNo2',   label: '공급자 담당자 연락처' },
+                { id: 'memberTelNo3',   label: '공급자 담당자 연락처' },
+                { id: 'memberEmail',    label: '공급자 담당자 이메일' },
+                { id: 'custRegisterNo', label: '공급받는자 사업자번호' },
+                { id: 'custName',       label: '공급받는자 상호' },
+                { id: 'custRepresent',  label: '공급받는자 대표자명' },
+                { id: 'custZipCode',    label: '공급받는자 우편번호' },
+                { id: 'custAddress1',   label: '공급받는자 주소' },
+                { id: 'managerNm',      label: '공급받는자 담당자명' },
+                { id: 'managerEmail',   label: '공급받는자 담당자 이메일' },
+            ];
+            for (const f of required) {
+                if (!val(f.id).trim()) {
+                    alert(f.label + '는(은) 필수 입력 항목입니다.');
+                    document.getElementById(f.id).focus();
+                    return;
+                }
+            }
+
+            // 이메일 형식 검증
+            const emails = [
+                { id: 'memberEmail',  label: '공급자 담당자 이메일' },
+                { id: 'managerEmail', label: '공급받는자 담당자 이메일' },
+            ];
+            for (const f of emails) {
+                if (!isValidEmail(val(f.id))) {
+                    alert(f.label + ' 형식이 올바르지 않습니다.');
+                    document.getElementById(f.id).focus();
+                    return;
+                }
+            }
+
+            if (val('smsGb') === 'Y') {
+                const smsRequired = [
+                    { id: 'managerTelNo1', label: '공급받는자 담당자 전화번호' },
+                    { id: 'managerTelNo2', label: '공급받는자 담당자 전화번호' },
+                    { id: 'managerTelNo3', label: '공급받는자 담당자 전화번호' },
+                ];
+                for (const f of smsRequired) {
+                    if (!val(f.id).trim()) {
+                        alert(f.label + '는(은) SMS 발송 시 필수 입력 항목입니다.');
+                        document.getElementById(f.id).focus();
+                        return;
+                    }
+                }
+            }
+
+            // 품목 행 필수값 검증
+            const itemRows = document.querySelectorAll('#itemList tr');
+            if (itemRows.length === 0) {
+                alert('품목을 1건 이상 입력해주세요.');
+                return;
+            }
+            const itemFields = [
+                { cls: 'i-year',      label: '연도' },
+                { cls: 'i-month',     label: '월' },
+                { cls: 'i-day',       label: '일' },
+                { cls: 'i-supplyAmt', label: '공급가액' },
+                { cls: 'i-taxAmt',    label: '세액' },
+            ];
+            for (let i = 0; i < itemRows.length; i++) {
+                const tr = itemRows[i];
+                const rowNo = tr.querySelector('.i-detailNo').value;
+                for (const f of itemFields) {
+                    const input = tr.querySelector('.' + f.cls);
+                    if (!input.value.trim() || input.value.trim() === '0') {
+                        alert(`품목 ${rowNo}번 행: ${f.label}는(은) 필수 입력 항목입니다.`);
+                        input.focus();
+                        return;
+                    }
+                }
+            }
+
             const items = [];
             document.querySelectorAll('#itemList tr').forEach(tr => {
                 items.push({
-                    erpUserMakeId: tr.querySelector('.i-erpUserMakeId').value,
+                    erpUserMakeId: val('erpUserMakeId'),
                     detailNo:      tr.querySelector('.i-detailNo').value,
                     year:          tr.querySelector('.i-year').value,
                     month:         tr.querySelector('.i-month').value,
@@ -573,12 +664,13 @@
                     standard:      tr.querySelector('.i-standard').value,
                     quantity:      tr.querySelector('.i-quantity').value,
                     unitAmt:       tr.querySelector('.i-unitAmt').value,
-                    supplyAmt:     tr.querySelector('.i-supplyAmt').value,
+                    supplyAmt:     tr.querySelector('.i-supplyAmt').value.replace(/,/g, ''),
                     taxAmt:        tr.querySelector('.i-taxAmt').value,
                     bigo:          tr.querySelector('.i-bigo').value,
                 });
             });
 
+            const noComma = id => val(id).replace(/,/g, '');
             const body = {
                 erpUserMakeId:  val('erpUserMakeId'),
                 documentType:   val('documentType'),
@@ -588,13 +680,13 @@
                 taxType:        val('taxType'),
                 makeDate:       val('makeDate').replace(/-/g, ''),
                 tranType:       val('tranType'),
-                cashAmt:        val('cashAmt'),
-                checkAmt:       val('checkAmt'),
-                billAmt:        val('billAmt'),
-                uncollectAmt:   val('uncollectAmt'),
-                taxAmt:         val('taxAmt'),
-                supplyAmt:      val('supplyAmt'),
-                totalAmt:       val('totalAmt'),
+                cashAmt:        noComma('cashAmt'),
+                checkAmt:       noComma('checkAmt'),
+                billAmt:        noComma('billAmt'),
+                uncollectAmt:   noComma('uncollectAmt'),
+                taxAmt:         noComma('taxAmt'),
+                supplyAmt:      noComma('supplyAmt'),
+                totalAmt:       noComma('totalAmt'),
                 compRegisterNo: val('compRegisterNo'),
                 compName:       val('compName'),
                 compRepresent:  val('compRepresent'),
