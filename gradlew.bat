@@ -34,9 +34,6 @@ set APP_HOME=%DIRNAME%
 
 @rem Resolve any "." and ".." in APP_HOME to make it shorter.
 for %%i in ("%APP_HOME%") do set APP_HOME=%%~fi
-@rem Pin JAVA_HOME to the local JDK 17 in the parent folder
-set "PROJECT_JAVA_HOME=%APP_HOME%\\..\\jdk-17"
-for %%i in ("%PROJECT_JAVA_HOME%") do set "JAVA_HOME=%%~fi"
 
 
 @rem Add default JVM options here. You can also use JAVA_OPTS and GRADLE_OPTS to pass JVM options to this script.
