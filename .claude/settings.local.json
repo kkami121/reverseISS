@@ -13,7 +13,10 @@
       "Bash(netstat -ano)",
       "Bash(tasklist /FI \"PID eq 36484\")",
       "Bash(powershell.exe -Command \"Get-Process -Id 36484 | Select-Object Id, ProcessName, MainWindowTitle\")",
-      "Bash(docker compose:*)"
+      "Bash(docker compose:*)",
+      "Bash(tasklist /FI \"PID eq 74876\" /FO LIST)",
+      "PowerShell(Get-Process | Where-Object { $_.Id -eq 74876 })",
+      "PowerShell(Stop-Process -Id 74876 -Force)"
     ]
   }
 }

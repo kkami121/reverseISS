@@ -1,0 +1,18 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "java",
+            "name": "ItemlinkApplication (dev)",
+            "request": "launch",
+            "mainClass": "com.myproject.itemlink.ItemlinkApplication",
+            "projectName": "reverseISS",
+            "vmArgs": "-Dspring.profiles.active=dev",
+            "envFile": "${workspaceFolder}/.env",
+            "javaExec": "C:\\Users\\gypark\\AppData\\Local\\Programs\\Eclipse Adoptium\\jdk-17.0.14.7-hotspot\\bin\\java.exe",
+            "cwd": "${workspaceFolder}",
+            "preLaunchTask": "processResources",
+            "console": "integratedTerminal"
+        }
+    ] 
+}
