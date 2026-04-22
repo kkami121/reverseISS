@@ -37,3 +37,6 @@ out/
 .env
 .env.prod
 gradlew.bat
+
+### claude ###
+.claude/
