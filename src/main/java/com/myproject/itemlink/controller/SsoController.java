@@ -43,7 +43,7 @@ public class SsoController {
                     .requireIssuer(ssoProperties.getIssuer())
                     .requireAudience(ssoProperties.getAudience())
                     .build()
-                    .parseClaimsJwt(parts[0] + "." + parts[1])
+                    .parseClaimsJwt(parts[0] + "." + parts[1] + ".")
                     .getBody();
 
             String userId = claims.get(ssoProperties.getClaimName(), String.class);
