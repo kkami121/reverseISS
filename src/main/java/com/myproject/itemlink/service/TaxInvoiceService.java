@@ -9,12 +9,15 @@ import com.myproject.itemlink.dto.TaxInvoiceStateRequest;
 import com.myproject.itemlink.dto.TaxInvoiceStateResponse;
 import com.myproject.itemlink.entity.TaxInvoiceDetail;
 import com.myproject.itemlink.entity.TaxInvoiceMaster;
-import com.myproject.itemlink.repository.TaxInvoiceMasterRepository;
+import com.myproject.itemlink.repository.TaxInvoiceDetailMapper;
+import com.myproject.itemlink.repository.TaxInvoiceMasterMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestClient;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Slf4j
@@ -23,7 +26,8 @@ import java.util.List;
 public class TaxInvoiceService {
 
     private final RestClient kaccountingRestClient;
-    private final TaxInvoiceMasterRepository masterRepository;
+    private final TaxInvoiceMasterMapper masterMapper;
+    private final TaxInvoiceDetailMapper detailMapper;
 
     public TaxInvoiceStateResponse state(TaxInvoiceStateRequest req) {
         return kaccountingRestClient.post()
@@ -41,6 +45,7 @@ public class TaxInvoiceService {
                 .body(TaxInvoiceListResponse.class);
     }
 
+    @Transactional
     public KaccountingResponse issue(TaxInvoiceRequest req) {
         KaccountingRequest body = buildRequest(req);
 
@@ -160,6 +165,7 @@ public class TaxInvoiceService {
         master.setManagerEmail(req.getManagerEmail());
         master.setBigo(req.getBigo());
         master.setSmsGb(req.getSmsGb());
+        master.setCreatedAt(LocalDateTime.now());
 
         if (response != null) {
             master.setStatus(response.getResult());
@@ -172,10 +178,12 @@ public class TaxInvoiceService {
             master.setStatus("FAIL");
         }
 
+        masterMapper.insert(master);
+
         if (req.getItems() != null) {
-            req.getItems().forEach(i -> {
+            for (TaxInvoiceRequest.Item i : req.getItems()) {
                 TaxInvoiceDetail detail = new TaxInvoiceDetail();
-                detail.setMaster(master);
+                detail.setMasterId(master.getId());
                 detail.setErpUserMakeId(i.getErpUserMakeId());
                 detail.setDetailNo(i.getDetailNo());
                 detail.setYear(i.getYear());
@@ -188,10 +196,8 @@ public class TaxInvoiceService {
                 detail.setSupplyAmt(i.getSupplyAmt());
                 detail.setTaxAmt(i.getTaxAmt());
                 detail.setBigo(i.getBigo());
-                master.getDetails().add(detail);
-            });
+                detailMapper.insert(detail);
+            }
         }
-
-        masterRepository.save(master);
     }
 }

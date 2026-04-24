@@ -1,23 +1,16 @@
 package com.myproject.itemlink.entity;
 
-import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
-@Entity
-@Table(name = "tax_invoice_master")
 @Getter
 @Setter
 @NoArgsConstructor
 public class TaxInvoiceMaster {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String erpUserMakeId;
@@ -75,14 +68,5 @@ public class TaxInvoiceMaster {
     private String errMsg;
     private String rtn;
 
-    @Column(updatable = false)
     private LocalDateTime createdAt;
-
-    @OneToMany(mappedBy = "master", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<TaxInvoiceDetail> details = new ArrayList<>();
-
-    @PrePersist
-    protected void onCreate() {
-        createdAt = LocalDateTime.now();
-    }
 }

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.myproject.itemlink.repository.TaxInvoiceDetailMapper">
+
+    <insert id="insert" parameterType="com.myproject.itemlink.entity.TaxInvoiceDetail"
+            useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO tax_invoice_detail (
+            master_id, erp_user_make_id, detail_no,
+            year, month, day, article_nm, standard,
+            quantity, unit_amt, supply_amt, tax_amt, bigo
+        ) VALUES (
+            #{masterId}, #{erpUserMakeId}, #{detailNo},
+            #{year}, #{month}, #{day}, #{articleNm}, #{standard},
+            #{quantity}, #{unitAmt}, #{supplyAmt}, #{taxAmt}, #{bigo}
+        )
+    </insert>
+
+</mapper>

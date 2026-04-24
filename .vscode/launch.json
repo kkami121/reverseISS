@@ -7,12 +7,12 @@
             "request": "launch",
             "mainClass": "com.myproject.itemlink.ItemlinkApplication",
             "projectName": "reverseISS",
-            "vmArgs": "-Dspring.profiles.active=dev",
+            "vmArgs": "-Dspring.profiles.active=dev -Dfile.encoding=UTF-8",
             "envFile": "${workspaceFolder}/.env",
             "javaExec": "C:\\Users\\gypark\\AppData\\Local\\Programs\\Eclipse Adoptium\\jdk-17.0.14.7-hotspot\\bin\\java.exe",
             "cwd": "${workspaceFolder}",
             "preLaunchTask": "processResources",
-            "console": "integratedTerminal"
+            "console": "internalConsole"
         }
     ]
 }

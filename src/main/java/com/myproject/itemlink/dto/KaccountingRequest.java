@@ -74,11 +74,23 @@ public class KaccountingRequest {
         @JsonProperty("COMP_REGISTER_NO")
         private String compRegisterNo;
 
+        @JsonProperty("COMP_SUB_ID")
+        private String compSubId;
+
         @JsonProperty("COMP_NAME")
         private String compName;
 
         @JsonProperty("COMP_REPRESENT")
         private String compRepresent;
+
+        @JsonProperty("COMP_BIZ_STATE")
+        private String compBizState;
+
+        @JsonProperty("COMP_BIZ_CATEGORY")
+        private String compBizCategory;
+
+        @JsonProperty("COMP_ZIP_CODE")
+        private String compZipCode;
 
         @JsonProperty("COMP_ADDRESS1")
         private String compAddress1;
@@ -101,8 +113,17 @@ public class KaccountingRequest {
         @JsonProperty("MEMBER_EMAIL")
         private String memberEmail;
 
+        @JsonProperty("MEMBER_POST")
+        private String memberPost;
+
+        @JsonProperty("CUST_KIND")
+        private String custKind;
+
         @JsonProperty("CUST_REGISTER_NO")
         private String custRegisterNo;
+
+        @JsonProperty("CUST_SUB_ID")
+        private String custSubId;
 
         @JsonProperty("CUST_NAME")
         private String custName;
@@ -110,11 +131,20 @@ public class KaccountingRequest {
         @JsonProperty("CUST_REPRESENT")
         private String custRepresent;
 
+        @JsonProperty("CUST_BIZ_STATE")
+        private String custBizState;
+
+        @JsonProperty("CUST_BIZ_CATEGORY")
+        private String custBizCategory;
+
         @JsonProperty("CUST_ZIP_CODE")
         private String custZipCode;
 
         @JsonProperty("CUST_ADDRESS1")
         private String custAddress1;
+
+        @JsonProperty("CUST_ADDRESS2")
+        private String custAddress2;
 
         @JsonProperty("MANAGER_NM")
         private String managerNm;
@@ -131,8 +161,38 @@ public class KaccountingRequest {
         @JsonProperty("MANAGER_EMAIL")
         private String managerEmail;
 
+        @JsonProperty("MANAGER_POST")
+        private String managerPost;
+
+        @JsonProperty("MANAGER2_NM")
+        private String manager2Nm;
+
+        @JsonProperty("MANAGER2_TEL_NO1")
+        private String manager2TelNo1;
+
+        @JsonProperty("MANAGER2_TEL_NO2")
+        private String manager2TelNo2;
+
+        @JsonProperty("MANAGER2_TEL_NO3")
+        private String manager2TelNo3;
+
+        @JsonProperty("MANAGER2_EMAIL")
+        private String manager2Email;
+
+        @JsonProperty("MANAGER2_POST")
+        private String manager2Post;
+
         @JsonProperty("BIGO")
         private String bigo;
+
+        @JsonProperty("BOOK_NO1")
+        private String bookNo1;
+
+        @JsonProperty("BOOK_NO2")
+        private String bookNo2;
+
+        @JsonProperty("SERIAL_NO")
+        private String serialNo;
 
         @JsonProperty("SMS_GB")
         private String smsGb;

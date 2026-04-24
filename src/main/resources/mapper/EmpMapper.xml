@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.myproject.itemlink.repository.EmpMapper">
+
+    <select id="findByUserId" parameterType="string"
+            resultType="com.myproject.itemlink.entity.EmpInfo">
+        SELECT nm_kor,
+               email || '@shinwon.com' AS email,
+               emp_id
+        FROM public.vi_dlp_emp
+        WHERE email = #{userId}
+    </select>
+
+</mapper>

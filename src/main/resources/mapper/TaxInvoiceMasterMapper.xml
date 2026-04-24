@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.myproject.itemlink.repository.TaxInvoiceMasterMapper">
+
+    <insert id="insert" parameterType="com.myproject.itemlink.entity.TaxInvoiceMaster"
+            useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO tax_invoice_master (
+            erp_user_make_id, document_type, mod_reason, ori_issue_id,
+            target_level, tax_type, make_date, tran_type,
+            cash_amt, check_amt, bill_amt, uncollect_amt,
+            tax_amt, supply_amt, total_amt,
+            comp_register_no, comp_name, comp_represent, comp_address1, comp_address2,
+            member_nm, member_tel_no1, member_tel_no2, member_tel_no3, member_email,
+            cust_register_no, cust_name, cust_represent, cust_zip_code, cust_address1,
+            manager_nm, manager_tel_no1, manager_tel_no2, manager_tel_no3, manager_email,
+            bigo, sms_gb, status, err_code, err_msg, rtn, created_at
+        ) VALUES (
+            #{erpUserMakeId}, #{documentType}, #{modReason}, #{oriIssueId},
+            #{targetLevel}, #{taxType}, #{makeDate}, #{tranType},
+            #{cashAmt}, #{checkAmt}, #{billAmt}, #{uncollectAmt},
+            #{taxAmt}, #{supplyAmt}, #{totalAmt},
+            #{compRegisterNo}, #{compName}, #{compRepresent}, #{compAddress1}, #{compAddress2},
+            #{memberNm}, #{memberTelNo1}, #{memberTelNo2}, #{memberTelNo3}, #{memberEmail},
+            #{custRegisterNo}, #{custName}, #{custRepresent}, #{custZipCode}, #{custAddress1},
+            #{managerNm}, #{managerTelNo1}, #{managerTelNo2}, #{managerTelNo3}, #{managerEmail},
+            #{bigo}, #{smsGb}, #{status}, #{errCode}, #{errMsg}, #{rtn}, #{createdAt}
+        )
+    </insert>
+
+</mapper>

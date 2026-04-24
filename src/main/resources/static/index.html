@@ -104,19 +104,47 @@
         .issue-btn-wrap { margin-top: 16px; }
         .submit-btn { padding: 12px; background: #1a56db; color: #fff; border: none; border-radius: 6px; font-size: 15px; cursor: pointer; width: 100%; font-weight: 700; letter-spacing: 2px; }
         .submit-btn:hover { background: #1648c5; }
-        .result-box { margin-top: 12px; padding: 14px; background: #f1f5f9; border-radius: 6px; white-space: pre-wrap; font-size: 12px; display: none; max-height: 260px; overflow-y: auto; }
+        /* 모달 */
+        .modal-overlay {
+            display: none; position: fixed; inset: 0;
+            background: rgba(0,0,0,0.45); z-index: 1000;
+            align-items: center; justify-content: center;
+        }
+        .modal-overlay.open { display: flex; }
+        .modal-box {
+            background: #fff; border-radius: 12px;
+            padding: 40px 36px 30px; min-width: 320px; max-width: 440px;
+            text-align: center; box-shadow: 0 8px 40px rgba(0,0,0,0.2);
+        }
+        .modal-icon { font-size: 52px; line-height: 1; margin-bottom: 14px; }
+        .modal-title { font-size: 19px; font-weight: 700; margin-bottom: 10px; }
+        .modal-msg { font-size: 14px; color: #475569; margin-bottom: 6px; word-break: break-all; }
+        .modal-sub { font-size: 12px; color: #94a3b8; margin-bottom: 24px; }
+        .modal-close-btn {
+            padding: 10px 40px; border: none; border-radius: 6px;
+            font-size: 14px; font-weight: 700; cursor: pointer; letter-spacing: 1px;
+        }
+        .modal-success .modal-icon { color: #16a34a; }
+        .modal-success .modal-title { color: #15803d; }
+        .modal-success .modal-close-btn { background: #1a56db; color: #fff; }
+        .modal-error .modal-icon { color: #ef4444; }
+        .modal-error .modal-title { color: #b91c1c; }
+        .modal-error .modal-close-btn { background: #ef4444; color: #fff; }
 
         /* 조회/상태 탭 공통 */
-        .search-btn { margin-top: 16px; padding: 10px; background: #0891b2; color: #fff; border: none; border-radius: 6px; font-size: 14px; cursor: pointer; width: 100%; font-weight: 600; }
-        .search-btn:hover { background: #0e7490; }
+        .search-wrap { border: 2px solid #222; font-size: 12px; margin-bottom: 12px; }
+        .search-header { background: #1e3a8a; color: #fff; padding: 8px 14px; font-size: 13px; font-weight: 700; letter-spacing: 1px; }
+        .search-table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+        .search-table td { padding: 6px 10px; border-bottom: 1px solid #ddd; vertical-align: middle; }
+        .search-table tr:last-child td { border-bottom: none; }
+        .search-label { color: #555; background: #f7f8fa; font-weight: 600; white-space: nowrap; border-right: 1px solid #ddd; width: 15%; font-size: 11px; }
+        .search-input input, .search-input select { border: none; border-bottom: 1px solid #bbb; width: 100%; font-size: 12px; padding: 2px 4px; background: transparent; }
+        .search-input input:focus, .search-input select:focus { outline: none; background: #f0f7ff; border-bottom-color: #1a56db; }
+        .search-btn { margin-top: 12px; padding: 12px; background: #1a56db; color: #fff; border: none; border-radius: 6px; font-size: 15px; cursor: pointer; width: 100%; font-weight: 700; letter-spacing: 2px; }
+        .search-btn:hover { background: #1648c5; }
         .result-meta { margin-top: 14px; font-size: 13px; color: #475569; display: none; }
         .result-meta span { font-weight: 700; color: #0f172a; }
         .result-table-wrap { margin-top: 8px; overflow-x: auto; display: none; }
-
-        h3 { margin: 18px 0 8px; color: #333; border-bottom: 1px solid #eee; padding-bottom: 4px; font-size: 13px; }
-        .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 0 16px; }
-        .grid2 label { display: block; margin-top: 10px; font-size: 12px; color: #555; }
-        .grid2 input, .grid2 select { width: 100%; padding: 6px; margin-top: 3px; border: 1px solid #ccc; border-radius: 4px; font-size: 13px; }
 
         table.result-tbl { border-collapse: collapse; width: 100%; font-size: 12px; }
         table.result-tbl th { background: #1e3a8a; color: #fff; padding: 7px 8px; text-align: left; white-space: nowrap; }
@@ -124,14 +152,21 @@
         table.result-tbl tr:hover td { background: #f0f9ff; }
         table.result-tbl tr:nth-child(even) td { background: #f8fafc; }
         table.result-tbl tr:nth-child(even):hover td { background: #f0f9ff; }
+
+        /* 페이징 */
+        .pager { display: flex; gap: 4px; justify-content: center; align-items: center; margin-top: 12px; flex-wrap: wrap; }
+        .pager button { padding: 5px 10px; border: 1px solid #cbd5e1; background: #fff; border-radius: 4px; cursor: pointer; font-size: 12px; min-width: 32px; }
+        .pager button.active { background: #1a56db; color: #fff; border-color: #1a56db; font-weight: 700; }
+        .pager button:hover:not(.active):not(:disabled) { background: #f0f7ff; border-color: #93c5fd; }
+        .pager button:disabled { color: #bbb; cursor: default; background: #f8fafc; }
     </style>
 </head>
 <body>
 
     <div class="tabs">
         <button class="tab-btn active" onclick="switchTab('issue')">세금계산서 역발행</button>
+        <button class="tab-btn" onclick="switchTab('state')">역발행 상태 조회</button>
         <button class="tab-btn" onclick="switchTab('list')">세금계산서 조회</button>
-        <button class="tab-btn" onclick="switchTab('state')">상태 조회</button>
     </div>
 
     <!-- ===== 발행 탭 ===== -->
@@ -145,7 +180,7 @@
                     <table>
                         <tr>
                             <td>ERP 사용자 ID</td>
-                            <td><input id="erpUserMakeId" value="230016(사번)" style="width:160px"></td>
+                            <td><input id="erpUserMakeId" value="" style="width:160px"></td>
                             <td>SMS 발송</td>
                             <td>
                                 <select id="smsGb" style="width:90px;font-size:12px;padding:1px 2px;border:none;border-bottom:1px solid #aaa;background:transparent;">
@@ -220,45 +255,45 @@
                         <tr>
                             <td class="party-label-col comp-label-col" rowspan="6">공 급 자</td>
                             <td class="field-label">사업자등록번호</td>
-                            <td class="field-input"><input id="compRegisterNo" value="2117861829" placeholder="사업자등록번호" maxlength="10" oninput="numOnly(this)"></td>
+                            <td class="field-input"><input id="compRegisterNo" value="" placeholder="사업자등록번호" maxlength="10" oninput="numOnly(this)"></td>
                         </tr>
                         <tr>
                             <td class="field-label">상호/대표자</td>
                             <td class="field-input half">
-                                <span><input id="compName" value="영동견본실" placeholder="상호"></span>
-                                <span><input id="compRepresent" value="장영수" placeholder="대표자"></span>
+                                <span><input id="compName" value="" placeholder="상호"></span>
+                                <span><input id="compRepresent" value="" placeholder="대표자"></span>
                             </td>
                         </tr>
                         <tr>
                             <td class="field-label">업태/업종</td>
                             <td class="field-input half">
-                                <span><input id="compBizState" value="SAMPLE" placeholder="업태"></span>
-                                <span><input id="compBizCategory" value="임가공" placeholder="업종"></span>
+                                <span><input id="compBizState" value="" placeholder="업태"></span>
+                                <span><input id="compBizCategory" value="" placeholder="업종"></span>
                             </td>
                         </tr>
                          <tr>
                             <td class="field-label">우편번호</td>
-                            <td class="field-input"><input id="compZipCode" value="04155" placeholder="우편번호" maxlength="5" oninput="numOnly(this)"></td>
+                            <td class="field-input"><input id="compZipCode" value="" placeholder="우편번호" maxlength="5" oninput="numOnly(this)"></td>
                         </tr>
                         <tr>
                             <td class="field-label">주소/상세주소</td>
                              <td class="field-input half">
-                                <span><input id="compAddress1" value="서울시 마포구 독막로42길 7" placeholder="공급자주소"></span>
-                                <span><input id="compAddress2" value="지하1층" placeholder="공급자상세주소"></span>
+                                <span><input id="compAddress1" value="" placeholder="공급자주소"></span>
+                                <span><input id="compAddress2" value="" placeholder="공급자상세주소"></span>
                             </td>    
                         </tr>
                         <tr>
                             <td class="field-label">담당자</td>
                             <td class="field-input half">
-                                <span><input id="memberNm" value="장영수" placeholder="성명"></span>
-                                <span><input id="memberEmail" value="test@gmail.com" placeholder="이메일"></span>
+                                <span><input id="memberNm" value="" placeholder="성명"></span>
+                                <span><input id="memberEmail" value="" placeholder="이메일"></span>
                             </td>
                         </tr>
                         <tr>
                             <td class="party-label-col comp-label-col"></td>
                             <td class="field-label">연락처</td>
                             <td class="field-input half">
-                                <span><input id="memberTelNo1" value="010" style="width:36px" maxlength="3" oninput="numOnly(this)">-<input id="memberTelNo2" value="0000" style="width:44px" maxlength="4" oninput="numOnly(this)">-<input id="memberTelNo3" value="0000" style="width:44px" maxlength="4" oninput="numOnly(this)"></span>
+                                <span><input id="memberTelNo1" value="" style="width:36px" maxlength="3" oninput="numOnly(this)">-<input id="memberTelNo2" value="" style="width:44px" maxlength="4" oninput="numOnly(this)">-<input id="memberTelNo3" value="" style="width:44px" maxlength="4" oninput="numOnly(this)"></span>
                             </td>
                         </tr>
                     </table>
@@ -300,15 +335,15 @@
                         <tr>
                             <td class="field-label">담당자</td>
                             <td class="field-input half">
-                                <span><input id="managerNm" value="박귀열" placeholder="성명"></span>
-                                <span><input id="managerEmail" value="gypark@shinwon.com" placeholder="이메일"></span>
+                                <span><input id="managerNm" value="" placeholder="성명"></span>
+                                <span><input id="managerEmail" value="" placeholder="이메일"></span>
                             </td>
                         </tr>
                         <tr>
                             <td class="party-label-col cust-label-col"></td>
                             <td class="field-label">연락처</td>
                             <td class="field-input half">
-                                <span><input id="managerTelNo1" value="02" style="width:36px" maxlength="3" oninput="numOnly(this)">-<input id="managerTelNo2" value="3274" style="width:44px" maxlength="4" oninput="numOnly(this)">-<input id="managerTelNo3" value="6524" style="width:44px" maxlength="4" oninput="numOnly(this)"></span>
+                                <span><input id="managerTelNo1" value="02" style="width:36px" maxlength="3" oninput="numOnly(this)">-<input id="managerTelNo2" value="3274" style="width:44px" maxlength="4" oninput="numOnly(this)">-<input id="managerTelNo3" value="5000" style="width:44px" maxlength="4" oninput="numOnly(this)"></span>
                             </td>
                         </tr>
                     </table>
@@ -397,45 +432,49 @@
         </div><!-- /invoice-wrap -->
 
         <div class="issue-btn-wrap">
-            <button class="submit-btn" onclick="issue()">세금계산서 역발행</button>
-            <div id="issueResult" class="result-box"></div>
+            <button id="issueBtn" class="submit-btn" onclick="issue()">세금계산서 역발행</button>
         </div>
     </div>
 
     <!-- ===== 조회 탭 ===== -->
     <div id="tab-list" class="tab-content">
-        <h3>조회 조건</h3>
-        <div class="grid2">
-            <div><label>사업자번호 (CORP_BIZ_NO)</label><input id="l-corpBizNo" value="1058111908"></div>
-            <div>
-                <label>계산서 구분 (CATEGORY)</label>
-                <select id="l-category">
-                    <option value="T">T - 전자세금계산서</option>
-                    <option value="C">C - 전자계산서</option>
-                </select>
-            </div>
-            <div>
-                <label>매출/매입 구분 (DOC_TYPE)</label>
-                <select id="l-docType">
-                    <option value="S">S - 매출</option>
-                    <option value="B">B - 매입</option>
-                </select>
-            </div>
-            <div>
-                <label>발행유형 (ISSUE_TYPE)</label>
-                <select id="l-issueType">
-                    <option value="0">0 - 전체</option>
-                    <option value="1">1 - 정발행</option>
-                    <option value="2">2 - 역발행</option>
-                </select>
-            </div>
-            <div>
-                <label>품목 포함 (ITEM_LIST)</label>
-                <select id="l-itemList">
-                    <option value="Y">Y - 포함</option>
-                    <option value="N">N - 미포함</option>
-                </select>
-            </div>
+        <div class="search-wrap">
+            <div class="search-header">세금계산서 조회 조건</div>
+            <table class="search-table">
+                <tr>
+                    <td class="search-label">계산서 구분</td>
+                    <td class="search-input">
+                        <select id="l-category">
+                            <option value="T">T - 전자세금계산서</option>
+                            <option value="C">C - 전자계산서</option>
+                        </select>
+                    </td>
+                    <td class="search-label">매출/매입 구분</td>
+                    <td class="search-input">
+                        <select id="l-docType">
+                            <option value="S">S - 매출</option>
+                            <option value="B">B - 매입</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="search-label">발행유형</td>
+                    <td class="search-input">
+                        <select id="l-issueType">
+                            <option value="0">0 - 전체</option>
+                            <option value="1">1 - 정발행</option>
+                            <option value="2">2 - 역발행</option>
+                        </select>
+                    </td>
+                    <td class="search-label">품목 포함</td>
+                    <td class="search-input">
+                        <select id="l-itemList">
+                            <option value="Y">Y - 포함</option>
+                            <option value="N">N - 미포함</option>
+                        </select>
+                    </td>
+                </tr>
+            </table>
         </div>
         <button class="search-btn" onclick="listSearch()">조회</button>
         <div id="listMeta" class="result-meta"></div>
@@ -452,25 +491,34 @@
                 <tbody id="listBody"></tbody>
             </table>
         </div>
+        <div id="listPager" class="pager"></div>
         <div id="listRawResult" class="result-box"></div>
     </div>
 
-    <!-- ===== 상태 조회 탭 ===== -->
+    <!-- ===== 역발행 상태 조회 탭 ===== -->
     <div id="tab-state" class="tab-content">
-        <h3>조회 조건</h3>
-        <div class="grid2">
-            <div><label>사업자번호 (CORP_BIZ_NO)</label><input id="s-corpBizNo" value="1058111908"></div>
-            <div>
-                <label>날짜 유형 (DATE_TYPE)</label>
-                <select id="s-dateType">
-                    <option value="01">01 - 작성일</option>
-                    <option value="02">02 - 발행일</option>
-                    <option value="03">03 - 전송일</option>
-                </select>
-            </div>
-            <div><label>시작일 (START_DATE)</label><input id="s-startDate" value="20250101"></div>
-            <div><label>종료일 (END_DATE)</label><input id="s-endDate" value="20250131"></div>
-            <div><label>ERP 사용자 ID (ERP_USER_MAKE_ID)</label><input id="s-erpUserMakeId" value=""></div>
+        <div class="search-wrap">
+            <div class="search-header">역발행 상태 조회 조건</div>
+            <table class="search-table">
+                <tr>
+                    <td class="search-label">ERP 사용자 ID</td>
+                    <td class="search-input"><input id="s-erpUserMakeId" value=""></td>
+                    <td class="search-label">날짜 유형</td>
+                    <td class="search-input">
+                        <select id="s-dateType">
+                            <option value="01">01 - 작성일</option>
+                            <option value="02">02 - 발행일</option>
+                            <option value="03">03 - 전송일</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="search-label">시작일</td>
+                    <td class="search-input"><input id="s-startDate" type="date"></td>
+                    <td class="search-label">종료일</td>
+                    <td class="search-input"><input id="s-endDate" type="date"></td>
+                </tr>
+            </table>
         </div>
         <button class="search-btn" onclick="stateSearch()">상태 조회</button>
         <div id="stateMeta" class="result-meta"></div>
@@ -489,11 +537,22 @@
         <div id="stateRawResult" class="result-box"></div>
     </div>
 
+    <!-- 결과 모달 -->
+    <div id="resultModal" class="modal-overlay" onclick="closeModal(event)">
+        <div class="modal-box" id="modalBox">
+            <div class="modal-icon" id="modalIcon"></div>
+            <div class="modal-title" id="modalTitle"></div>
+            <div class="modal-msg" id="modalMsg"></div>
+            <div class="modal-sub" id="modalSub"></div>
+            <button class="modal-close-btn" onclick="closeModal()">확인</button>
+        </div>
+    </div>
+
     <script>
         // ── 탭 전환
         function switchTab(name) {
             document.querySelectorAll('.tab-btn').forEach((b, i) => {
-                b.classList.toggle('active', ['issue','list','state'][i] === name);
+                b.classList.toggle('active', ['issue','state','list'][i] === name);
             });
             document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
             document.getElementById('tab-' + name).classList.add('active');
@@ -528,14 +587,20 @@
 
         function addItem() {
             itemCount++;
+            const now = new Date();
+            const today = {
+                y: now.getFullYear().toString(),
+                m: String(now.getMonth() + 1).padStart(2, '0'),
+                d: String(now.getDate()).padStart(2, '0')
+            };
             const tbody = document.getElementById('itemList');
             const tr = document.createElement('tr');
             tr.id = 'item-' + itemCount;
             tr.innerHTML = `
                 <td><input class="i-detailNo" value="${itemCount}" readonly style="background:#f5f5f5;cursor:default;text-align:center;"></td>
-                <td><input class="i-year" value="2026" maxlength="4"></td>
-                <td><input class="i-month" value="04" maxlength="2"></td>
-                <td><input class="i-day" value="01" maxlength="2"></td>
+                <td><input class="i-year" value="${today.y}" maxlength="4"></td>
+                <td><input class="i-month" value="${today.m}" maxlength="2"></td>
+                <td><input class="i-day" value="${today.d}" maxlength="2"></td>
                 <td><input class="i-articleNm" value=""></td>
                 <td><input class="i-standard" value=""></td>
                 <td><input class="i-quantity num" value=""></td>
@@ -662,10 +727,10 @@
                     day:           tr.querySelector('.i-day').value,
                     articleNm:     tr.querySelector('.i-articleNm').value,
                     standard:      tr.querySelector('.i-standard').value,
-                    quantity:      tr.querySelector('.i-quantity').value,
-                    unitAmt:       tr.querySelector('.i-unitAmt').value,
+                    quantity:      tr.querySelector('.i-quantity').value.replace(/,/g, ''),
+                    unitAmt:       tr.querySelector('.i-unitAmt').value.replace(/,/g, ''),
                     supplyAmt:     tr.querySelector('.i-supplyAmt').value.replace(/,/g, ''),
-                    taxAmt:        tr.querySelector('.i-taxAmt').value,
+                    taxAmt:        tr.querySelector('.i-taxAmt').value.replace(/,/g, ''),
                     bigo:          tr.querySelector('.i-bigo').value,
                 });
             });
@@ -712,9 +777,9 @@
                 items
             };
 
-            const resultDiv = document.getElementById('issueResult');
-            resultDiv.style.display = 'block';
-            resultDiv.textContent = '요청 중...';
+            const btn = document.getElementById('issueBtn');
+            btn.disabled = true;
+            btn.textContent = '처리 중...';
             try {
                 const res = await fetch('/reverse/tax-invoice/issue', {
                     method: 'POST',
@@ -722,27 +787,81 @@
                     body: JSON.stringify(body)
                 });
                 const data = await res.json();
-                resultDiv.textContent = JSON.stringify(data, null, 2);
+                if (data.result === 'SUCCESS' && data.errCode === '0000') {
+                    const rtn = data.data?.RTN;
+                    showModal(true, '역발행이 완료되었습니다.', rtn ? '승인번호: ' + rtn : '');
+                } else {
+                    const msg = data.errMsg || data.data?.ERR_MSG || '오류가 발생했습니다.';
+                    const code = data.errCode || data.data?.ERR_CODE || '';
+                    showModal(false, msg, code ? '오류코드: ' + code : '');
+                }
             } catch (e) {
-                resultDiv.textContent = '오류: ' + e.message;
+                showModal(false, '요청 중 오류가 발생했습니다.', e.message);
+            } finally {
+                btn.disabled = false;
+                btn.textContent = '세금계산서 역발행';
             }
         }
 
         // ── 조회 탭
         function fmt(n) { return (n ?? 0).toLocaleString(); }
 
+        // ── 조회 탭 페이징
+        const LIST_PAGE_SIZE = 10;
+        let listData = [];
+        let listCurrent = 1;
+
+        function renderListPage(page) {
+            listCurrent = page;
+            const tbody = document.getElementById('listBody');
+            tbody.innerHTML = '';
+            const start = (page - 1) * LIST_PAGE_SIZE;
+            listData.slice(start, start + LIST_PAGE_SIZE).forEach((item, i) => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${start + i + 1}</td><td>${item.MAKE_DD??''}</td><td>${item.ISSUE_DD??''}</td>
+                    <td style="font-size:11px">${item.APPR_NO??''}</td>
+                    <td>${item.COMP_NM??''}</td><td>${item.CUST_NM??''}</td>
+                    <td style="text-align:right">${fmt(item.AMT_SUPPLY)}</td>
+                    <td style="text-align:right">${fmt(item.AMT_TAX)}</td>
+                    <td style="text-align:right"><b>${fmt(item.AMT_TOT)}</b></td>
+                    <td>${item.CATEGORY_NM??''}</td><td>${item.ISSUE_TYPE_NM??''}</td>`;
+                tbody.appendChild(tr);
+            });
+            renderListPager();
+        }
+
+        function renderListPager() {
+            const total = Math.ceil(listData.length / LIST_PAGE_SIZE);
+            const pager = document.getElementById('listPager');
+            if (total <= 1) { pager.innerHTML = ''; return; }
+
+            const WINDOW = 5;
+            let start = Math.max(1, listCurrent - Math.floor(WINDOW / 2));
+            let end   = Math.min(total, start + WINDOW - 1);
+            if (end - start < WINDOW - 1) start = Math.max(1, end - WINDOW + 1);
+
+            let html = `<button ${listCurrent === 1 ? 'disabled' : ''} onclick="renderListPage(${listCurrent - 1})">◀</button>`;
+            for (let p = start; p <= end; p++) {
+                html += `<button class="${p === listCurrent ? 'active' : ''}" onclick="renderListPage(${p})">${p}</button>`;
+            }
+            html += `<button ${listCurrent === total ? 'disabled' : ''} onclick="renderListPage(${listCurrent + 1})">▶</button>`;
+            pager.innerHTML = html;
+        }
+
         async function listSearch() {
             const body = {
-                CORP_BIZ_NO: val('l-corpBizNo'),
+                CORP_BIZ_NO: '1058111908',
                 CATEGORY:    document.getElementById('l-category').value,
                 DOC_TYPE:    document.getElementById('l-docType').value,
                 ISSUE_TYPE:  document.getElementById('l-issueType').value,
                 ITEM_LIST:   document.getElementById('l-itemList').value,
             };
-            const meta = document.getElementById('listMeta');
+            const meta     = document.getElementById('listMeta');
             const tableWrap = document.getElementById('listTableWrap');
-            const rawDiv = document.getElementById('listRawResult');
-            meta.style.display = 'none'; tableWrap.style.display = 'none';
+            const rawDiv   = document.getElementById('listRawResult');
+            const pager    = document.getElementById('listPager');
+            meta.style.display = 'none'; tableWrap.style.display = 'none'; pager.innerHTML = '';
             rawDiv.style.display = 'block'; rawDiv.textContent = '조회 중...';
             try {
                 const res = await fetch('/reverse/tax-invoice/list', {
@@ -754,34 +873,22 @@
                     rawDiv.style.display = 'block'; rawDiv.textContent = JSON.stringify(data, null, 2); return;
                 }
                 const d = data.data;
+                listData = d.LIST ?? [];
                 meta.style.display = 'block';
-                meta.innerHTML = `총 <span>${d.ROW_CNT ?? 0}</span>건 (잔여: ${d.ROW_REST_CNT ?? 0}건, 다음페이지: ${d.IS_NEXT === 'Y' ? '있음' : '없음'})`;
-                const tbody = document.getElementById('listBody');
-                tbody.innerHTML = '';
-                (d.LIST ?? []).forEach((item, idx) => {
-                    const tr = document.createElement('tr');
-                    tr.innerHTML = `
-                        <td>${idx+1}</td><td>${item.MAKE_DD??''}</td><td>${item.ISSUE_DD??''}</td>
-                        <td style="font-size:11px">${item.APPR_NO??''}</td>
-                        <td>${item.COMP_NM??''}</td><td>${item.CUST_NM??''}</td>
-                        <td style="text-align:right">${fmt(item.AMT_SUPPLY)}</td>
-                        <td style="text-align:right">${fmt(item.AMT_TAX)}</td>
-                        <td style="text-align:right"><b>${fmt(item.AMT_TOT)}</b></td>
-                        <td>${item.CATEGORY_NM??''}</td><td>${item.ISSUE_TYPE_NM??''}</td>`;
-                    tbody.appendChild(tr);
-                });
+                meta.innerHTML = `총 <span>${listData.length}</span>건`;
                 tableWrap.style.display = 'block';
+                renderListPage(1);
             } catch (e) { rawDiv.style.display = 'block'; rawDiv.textContent = '오류: ' + e.message; }
         }
 
         // ── 상태 조회 탭
         async function stateSearch() {
             const body = {
-                CORP_BIZ_NO: val('s-corpBizNo'),
+                CORP_BIZ_NO: '1058111908',
                 DATA: {
                     DATE_TYPE:        document.getElementById('s-dateType').value,
-                    START_DATE:       val('s-startDate'),
-                    END_DATE:         val('s-endDate'),
+                    START_DATE:       val('s-startDate').replace(/-/g, ''),
+                    END_DATE:         val('s-endDate').replace(/-/g, ''),
                     ERP_USER_MAKE_ID: val('s-erpUserMakeId'),
                 }
             };
@@ -817,11 +924,65 @@
             } catch (e) { rawDiv.style.display = 'block'; rawDiv.textContent = '오류: ' + e.message; }
         }
 
+        // ── 결과 모달
+        function showModal(success, msg, sub) {
+            document.getElementById('modalIcon').textContent  = success ? '✓' : '✕';
+            document.getElementById('modalTitle').textContent = success ? '역발행 완료' : '역발행 실패';
+            document.getElementById('modalMsg').textContent   = msg;
+            document.getElementById('modalSub').textContent   = sub || '';
+            document.getElementById('modalBox').className     = 'modal-box ' + (success ? 'modal-success' : 'modal-error');
+            document.getElementById('resultModal').classList.add('open');
+        }
+        function closeModal(e) {
+            if (e && e.target !== document.getElementById('resultModal')) return;
+            document.getElementById('resultModal').classList.remove('open');
+        }
+
         // 작성일자 오늘 날짜 세팅
         document.getElementById('makeDate').value = todayStr();
 
+        // 상태 조회 기본 날짜: 이번 달 1일 ~ 오늘
+        (() => {
+            const now = new Date();
+            const pad = n => String(n).padStart(2, '0');
+            const today = `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}`;
+            const firstDay = `${now.getFullYear()}-${pad(now.getMonth() + 1)}-01`;
+            document.getElementById('s-startDate').value = firstDay;
+            document.getElementById('s-endDate').value   = today;
+        })();
+
+        // 상태 조회 날짜 범위 31일 초과 검증
+        (() => {
+            function checkDateRange(changed) {
+                const s = document.getElementById('s-startDate').value;
+                const e = document.getElementById('s-endDate').value;
+                if (!s || !e) return;
+                const diff = (new Date(e) - new Date(s)) / (1000 * 60 * 60 * 24);
+                if (diff < 0) {
+                    alert('종료일은 시작일보다 이전일 수 없습니다.');
+                    document.getElementById(changed).value = '';
+                } else if (diff > 31) {
+                    alert('조회 기간은 최대 31일까지 가능합니다.');
+                    document.getElementById(changed).value = '';
+                }
+            }
+            document.getElementById('s-startDate').addEventListener('change', () => checkDateRange('s-startDate'));
+            document.getElementById('s-endDate').addEventListener('change',   () => checkDateRange('s-endDate'));
+        })();
+
         // 기본 품목 1행
         addItem();
+
+        // 로그인 사용자 정보 자동 입력
+        fetch('/reverse/me')
+            .then(res => res.ok ? res.json() : null)
+            .then(user => {
+                if (!user) return;
+                document.getElementById('managerNm').value       = user.nmKor || '';
+                document.getElementById('managerEmail').value    = user.email  || '';
+                document.getElementById('erpUserMakeId').value   = user.empId  || '';
+                document.getElementById('s-erpUserMakeId').value = user.empId  || '';
+            });
     </script>
 </body>
 </html>

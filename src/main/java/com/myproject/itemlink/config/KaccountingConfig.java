@@ -56,15 +56,19 @@ public class KaccountingConfig {
             ClientHttpResponse response = execution.execute(request, body);
 
             byte[] responseBody = response.getBody().readAllBytes();
-            log.info("[Kaccounting] Response ({}):\n{}", response.getStatusCode(), prettyJson(responseBody));
-
             HttpStatusCode status = response.getStatusCode();
+            org.springframework.http.HttpHeaders headers = new org.springframework.http.HttpHeaders();
+            headers.addAll(response.getHeaders());
+            response.close();
+
+            log.info("[Kaccounting] Response ({}):\n{}", status, prettyJson(responseBody));
+
             return new ClientHttpResponse() {
-                @Override public HttpStatusCode getStatusCode() throws IOException { return status; }
-                @Override public String getStatusText() throws IOException { return ""; }
+                @Override public HttpStatusCode getStatusCode() { return status; }
+                @Override public String getStatusText() { return ""; }
                 @Override public void close() {}
                 @Override public InputStream getBody() { return new ByteArrayInputStream(responseBody); }
-                @Override public org.springframework.http.HttpHeaders getHeaders() { return response.getHeaders(); }
+                @Override public org.springframework.http.HttpHeaders getHeaders() { return headers; }
             };
         };
     }
