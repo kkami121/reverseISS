@@ -68,15 +68,30 @@ public class SsoController {
         String[] parts = token.split("\\.");
         if (parts.length != 3) throw new IllegalArgumentException("Invalid JWT format");
 
-        byte[] keyBytes = ssoProperties.getSecret().getBytes(StandardCharsets.UTF_8);
+        byte[] input    = (parts[0] + "." + parts[1]).getBytes(StandardCharsets.UTF_8);
+        byte[] provided = Base64.getUrlDecoder().decode(padBase64(parts[2]));
+        String secret   = ssoProperties.getSecret().trim();
+
+        // 1) UTF-8 bytes 그대로
+        if (hmacMatches(secret.getBytes(StandardCharsets.UTF_8), input, provided)) return;
+
+        // 2) Base64 decode 후 bytes (많은 JWT 라이브러리가 이 방식 사용)
+        try {
+            if (hmacMatches(Base64.getDecoder().decode(secret), input, provided)) return;
+        } catch (IllegalArgumentException ignored) {}
+
+        // 3) URL-safe Base64 decode 후 bytes
+        try {
+            if (hmacMatches(Base64.getUrlDecoder().decode(padBase64(secret)), input, provided)) return;
+        } catch (IllegalArgumentException ignored) {}
+
+        throw new SecurityException("JWT signature does not match");
+    }
+
+    private boolean hmacMatches(byte[] keyBytes, byte[] input, byte[] expected) throws Exception {
         Mac mac = Mac.getInstance("HmacSHA256");
         mac.init(new SecretKeySpec(keyBytes, "HmacSHA256"));
-        byte[] computed = mac.doFinal((parts[0] + "." + parts[1]).getBytes(StandardCharsets.UTF_8));
-        byte[] provided  = Base64.getUrlDecoder().decode(padBase64(parts[2]));
-
-        if (!MessageDigest.isEqual(computed, provided)) {
-            throw new SecurityException("JWT signature does not match");
-        }
+        return MessageDigest.isEqual(mac.doFinal(input), expected);
     }
 
     private static String padBase64(String s) {
