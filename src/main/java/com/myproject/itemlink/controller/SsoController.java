@@ -9,6 +9,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,6 +19,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
 
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 public class SsoController {
@@ -53,6 +55,7 @@ public class SsoController {
             }
             response.sendRedirect(ctx + "/");
         } catch (Exception e) {
+            log.warn("[SSO] 인증 실패 - {}: {}", e.getClass().getSimpleName(), e.getMessage());
             response.sendRedirect(ctx + "/unauthorized.html");
         }
     }
